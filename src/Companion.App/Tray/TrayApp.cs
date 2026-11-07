@@ -4,6 +4,7 @@ using Companion.App.Hosting;
 using Companion.Contracts;
 using Companion.Contracts.Engine;
 using Companion.Contracts.Features;
+using Companion.Contracts.GameIo;
 using Companion.Contracts.Host;
 using Companion.Contracts.Knowledge;
 using Companion.Contracts.Safety;
@@ -56,7 +57,11 @@ internal sealed class TrayApp : ApplicationContext
         _s.Notifier.Sink = n => _ui.Post(_ => ShowBalloon(n), null);
         _hotkey = new HotkeyWindow(() => StopNow(StopSource.Hotkey, "hotkey.stop"));
         SystemEvents.SessionEnding += OnSessionEnding;
-        _iconTimer.Tick += (_, _) => UpdateIconText();
+        _iconTimer.Tick += (_, _) =>
+        {
+            UpdateIconText();
+            CheckGameFolderMismatch();
+        };
         _iconTimer.Start();
 
         // Replay the most important start-up notification (they were raised before the tray existed).
@@ -214,6 +219,7 @@ internal sealed class TrayApp : ApplicationContext
         settings.DropDownItems.Add(policy);
         settings.DropDownItems.Add(new ToolStripMenuItem("Knowledge...", null, (_, _) => OpenKnowledge()));
         settings.DropDownItems.Add(FeaturesMenu());
+        settings.DropDownItems.Add("Game folder...", null, (_, _) => ChooseGameFolder());
         settings.DropDownItems.Add("Trust this build...", null, (_, _) => TrustBuild());
         _menu.Items.Add(settings);
         _menu.Items.Add(new ToolStripSeparator());
@@ -519,6 +525,62 @@ internal sealed class TrayApp : ApplicationContext
         {
             form.Close();
             form.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Advanced > Game folder...: shows the folder in use and saves another one the user chooses (same validation as the
+    /// start dialog). The new folder is used after a restart; the companion never restarts by itself.
+    /// </summary>
+    private void ChooseGameFolder()
+    {
+        var current = _s.Paths.GameDir;
+        var running = GameFolderResolver.FindRunningGame();
+        var elsewhere = GameFolderResolver.IsOtherGameFolder(running, current) ? running : null;
+        var variableWins = CompanionPaths.NormalizeGameDir(Environment.GetEnvironmentVariable(CompanionPaths.GameDirVariable)) is not null;
+        if (GameFolderDialog.AskFromTray(current, elsewhere, variableWins) is not { } chosen)
+        {
+            return;
+        }
+
+        if (!new GameFolderStore(_s.Paths.RuntimeDir).Save(chosen))
+        {
+            _s.Notifier.Notify(HostMessages.Host("game.folderNotSaved"));
+            return;
+        }
+
+        Journal("gameFolder.changed");
+        _s.Notifier.Notify(HostMessages.Host("game.folderSaved"));
+    }
+
+    /// <summary>When the last connect found the game but its TOS.exe is not the one in use, look at most once a minute.</summary>
+    private static readonly TimeSpan FolderHintPeriod = TimeSpan.FromMinutes(1);
+
+    private bool _folderHintShown;
+    private DateTimeOffset _folderHintChecked = DateTimeOffset.MinValue;
+
+    /// <summary>
+    /// One plain-words notification per run when GameIO refused the running game because its TOS.exe lives in another
+    /// valid game folder (ExePathMismatch). Nothing switches by itself: the exe-path identity check is a safety rule.
+    /// </summary>
+    private void CheckGameFolderMismatch()
+    {
+        if (_folderHintShown || _exiting || _s.GameIo.LastConnectProblem != ConnectProblem.ExePathMismatch)
+        {
+            return;
+        }
+
+        var now = DateTimeOffset.UtcNow;
+        if (now - _folderHintChecked < FolderHintPeriod)
+        {
+            return;
+        }
+
+        _folderHintChecked = now;
+        if (GameFolderResolver.IsOtherGameFolder(GameFolderResolver.FindRunningGame(), _s.Paths.GameDir))
+        {
+            _folderHintShown = true;
+            _s.Notifier.Notify(HostMessages.Host("game.folderMismatch"));
         }
     }
 

@@ -40,4 +40,27 @@ public sealed class GameDirTests
         Assert.AreEqual(CompanionPaths.DefaultGameDir, CompanionPaths.ResolveGameDir(@"Games\TOS"));
         Assert.AreEqual(CompanionPaths.DefaultGameDir, CompanionPaths.ResolveGameDir("C:\\bad|path"));
     }
+
+    [TestMethod]
+    public void Normalize_GivesNullWithoutTheGame_AndTheFullPathWithIt()
+    {
+        Assert.IsNull(CompanionPaths.NormalizeGameDir(null));
+        Assert.IsNull(CompanionPaths.NormalizeGameDir(Path.GetTempPath()));
+        Assert.IsNull(CompanionPaths.NormalizeGameDir(@"Games\TOS"));
+
+        var dir = Path.Combine(Path.GetTempPath(), "tosdir-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "TOS.exe"), "x");
+            Assert.AreEqual(Path.GetFullPath(dir), CompanionPaths.NormalizeGameDir(" \"" + dir + "\\\" "));
+            Assert.IsFalse(CompanionPaths.IsCompleteGameDir(dir), "TOS.exe alone is not a complete install");
+            File.WriteAllText(Path.Combine(dir, "GameAssembly.dll"), "x");
+            Assert.IsTrue(CompanionPaths.IsCompleteGameDir(dir));
+        }
+        finally
+        {
+            Directory.Delete(dir, true);
+        }
+    }
 }

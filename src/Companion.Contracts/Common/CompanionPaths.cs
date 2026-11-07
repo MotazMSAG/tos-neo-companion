@@ -44,15 +44,29 @@ public sealed record CompanionPaths(
     string GameLogPath,
     string GameExePath)
 {
-    /// <summary>Game folder used when TOS_GAME_DIR is not set.</summary>
+    /// <summary>Game folder used when nothing else names one (TOS_GAME_DIR unset, nothing saved, nothing found).</summary>
     public const string DefaultGameDir = @"D:\Games\TOS";
 
-    /// <summary>Environment variable naming the game folder (the one that holds TOS.exe and Log\log.txt).</summary>
+    /// <summary>Environment variable naming the game folder (the one that holds TOS.exe and Log\log.txt). Optional.</summary>
     public const string GameDirVariable = "TOS_GAME_DIR";
+
+    /// <summary>The game's executable file name.</summary>
+    public const string GameExeName = "TOS.exe";
+
+    /// <summary>The game's Unity runtime next to the executable (its presence tells a real game folder from a stray TOS.exe).</summary>
+    public const string GameAssemblyName = "GameAssembly.dll";
+
+    /// <summary>File in <see cref="RuntimeDir"/> that remembers the game folder found or chosen at an earlier start.</summary>
+    public const string GameFolderFileName = "game-folder.json";
+
+    /// <summary>The runtime data root every host uses (%ProgramData%\TOS-companion).</summary>
+    public static string DefaultRuntimeDir =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TOS-companion");
 
     /// <summary>
     /// Default layout for an install folder: runtime under %ProgramData%\TOS-companion, game under TOS_GAME_DIR when that
-    /// names an existing folder with TOS.exe in it, else D:\Games\TOS.
+    /// names an existing folder with TOS.exe in it, else D:\Games\TOS. The host and the guardian resolve the game folder
+    /// more thoroughly (saved choice, running game, usual places) and use <see cref="ForGame"/>.
     /// </summary>
     public static CompanionPaths Default(string installDir) => ForGame(installDir, ResolveGameDir(Environment.GetEnvironmentVariable(GameDirVariable)));
 
@@ -62,29 +76,65 @@ public sealed record CompanionPaths(
         Path.Combine(installDir, "data"),
         Path.Combine(installDir, "templates"),
         Path.Combine(installDir, "features"),
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TOS-companion"),
+        DefaultRuntimeDir,
         gameDir,
         Path.Combine(gameDir, "Log", "log.txt"),
-        Path.Combine(gameDir, "TOS.exe"));
+        Path.Combine(gameDir, GameExeName));
 
     /// <summary>The configured game folder when it is a full path that holds TOS.exe; otherwise the default.</summary>
-    public static string ResolveGameDir(string? configured)
+    public static string ResolveGameDir(string? configured) => NormalizeGameDir(configured) ?? DefaultGameDir;
+
+    /// <summary>
+    /// The full path of <paramref name="configured"/> (quotes, spaces and trailing slashes removed) when it is a fully
+    /// qualified folder that holds TOS.exe; otherwise null. Existence checks only; nothing is opened.
+    /// </summary>
+    public static string? NormalizeGameDir(string? configured)
     {
         if (string.IsNullOrWhiteSpace(configured))
         {
-            return DefaultGameDir;
+            return null;
         }
 
         try
         {
-            var dir = configured.Trim().Trim('"').TrimEnd('\\', '/');
-            return Path.IsPathFullyQualified(dir) && File.Exists(Path.Combine(dir, "TOS.exe")) ? Path.GetFullPath(dir) : DefaultGameDir;
+            var dir = configured.Trim().Trim('"').Trim().TrimEnd('\\', '/');
+            if (dir.Length == 2 && dir[1] == ':')
+            {
+                dir += "\\"; // a drive root such as "E:" means "E:\", not the current folder of drive E
+            }
+
+            return Path.IsPathFullyQualified(dir) && File.Exists(Path.Combine(dir, GameExeName)) ? Path.GetFullPath(dir) : null;
         }
         catch (Exception e) when (e is ArgumentException or NotSupportedException or IOException or UnauthorizedAccessException)
         {
-            return DefaultGameDir;
+            return null;
         }
     }
+
+    /// <summary>
+    /// True when <paramref name="dir"/> looks like a complete game install: TOS.exe and GameAssembly.dll are both there.
+    /// Used for folders the companion finds by itself (a folder the user names needs TOS.exe only).
+    /// </summary>
+    public static bool IsCompleteGameDir(string? dir)
+    {
+        var full = NormalizeGameDir(dir);
+        if (full is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            return File.Exists(Path.Combine(full, GameAssemblyName));
+        }
+        catch (Exception e) when (e is ArgumentException or NotSupportedException or IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>The saved game folder (see <see cref="GameFolderFileName"/>).</summary>
+    public string GameFolderPath => Path.Combine(RuntimeDir, GameFolderFileName);
 
     /// <summary>config.json (automation switches etc.); written only by the tray UI of the elevated host.</summary>
     public string ConfigPath => Path.Combine(RuntimeDir, "config.json");

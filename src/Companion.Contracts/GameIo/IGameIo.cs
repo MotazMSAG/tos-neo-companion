@@ -17,13 +17,19 @@ public interface IGameIo
 {
     /// <summary>
     /// Resolves the game: EnumWindows for a visible UnityWndClass window whose PID is a TOS process with exe path
-    /// D:\Games\TOS\TOS.exe (0 or several matches = problem), checks elevation/64-bit, reads the registry baseline,
+    /// CompanionPaths.GameExePath (0 or several matches = problem), checks elevation/64-bit, reads the registry baseline,
     /// probes PostMessage(WM_NULL) for UIPI. Sends no input.
     /// </summary>
     ConnectResult Connect(CancellationToken ct);
 
     /// <summary>Current identity, or null if not connected.</summary>
     GameIdentity? Identity { get; }
+
+    /// <summary>
+    /// The problem of the latest <see cref="Connect"/> (None after a successful one), or null before the first. Read-only;
+    /// the tray uses it to explain an <see cref="ConnectProblem.ExePathMismatch"/> in plain words.
+    /// </summary>
+    ConnectProblem? LastConnectProblem => null;
 
     /// <summary>
     /// How long ago the game was last the foreground window (the passive sampler; read-only, no window call, cheap from any

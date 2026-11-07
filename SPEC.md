@@ -108,6 +108,7 @@ Contract rules:
 - **App start sequence** (`Program.Main`, elevated):
   1. `--guardian <hostPid> <hostStartTicks>` mode? Then run the guardian (10.1) and exit.
   2. Assert 64-bit and elevated. Take the single-instance mutex `Local\TOS-companion.host`; if it is held, notify "already running" and exit. Treat AbandonedMutexException as acquired.
+  2a. Resolve the game folder once, before the host is created (no environment variable needed): `TOS_GAME_DIR` when it names a folder with TOS.exe; else the folder saved in `RuntimeDir\game-folder.json` when it still holds TOS.exe; else the running game's folder (`GameFolderLocator`: the same read-only search as `Connect` without the exe comparison, OpenProcess 0x1000 only; TOS.exe with GameAssembly.dll next to it); else the usual places (`D:\Games\TOS`, then on every fixed drive `\Games\TOS`, `\TOS`, `\Program Files\TOS`, `\Program Files (x86)\TOS`; existence checks only, TOS.exe and GameAssembly.dll); else a small dialog before the tray (Try again / Choose folder... / Exit). A found or chosen folder is saved (atomic SEC-2 write). The guardian uses the variable, then the saved folder, then `D:\Games\TOS`, and never shows a dialog. The tray's Advanced > Game folder... saves another folder for the next start. The exe-path identity check of `Connect` is unchanged: a game started from another folder is refused (ExePathMismatch) and the tray says so once, in plain words.
   3. Create or verify RuntimeDir: ACL Administrators + SYSTEM full and the interactive user read-only; refuse reparse points.
   4. Load config.json (missing means `CompanionConfig.Default`) and the HALT latch.
   5. Load the trust list. Hash every install-side file (code: `*.dll`/`*.exe` in InstallDir; data: `data\`, `templates\`, `features\`). On mismatch, HostState = Untrusted and no jobs are accepted until the user clicks "Trust this build…" in the tray (10.1).
@@ -136,7 +137,7 @@ Contract rules:
 
 ### 6.1 Log reading (`ILogTracker`, LOG-11, PITFALL-05/09/13, F14)
 **File handling.**
-- File: `<game folder>\Log\log.txt` (default `D:\Games\TOS`, or `TOS_GAME_DIR`). Open each poll with `FileShare.ReadWrite | FileShare.Delete` and close immediately, so the game's rename at startup never fails.
+- File: `<game folder>\Log\log.txt` (the game folder of the start sequence, step 2a). Open each poll with `FileShare.ReadWrite | FileShare.Delete` and close immediately, so the game's rename at startup never fails.
 - Take the length from the open handle. Read bytes from the offset to EOF, at most 8 MB per poll.
 
 **Entries.**

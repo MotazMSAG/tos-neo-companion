@@ -10,6 +10,7 @@ namespace Companion.App;
 /// Entry point (SPEC 4 "App start sequence"):
 /// 1. <c>--guardian &lt;hostPid&gt; &lt;hostStartTicks&gt;</c> runs the guardian and exits;
 /// 2. asserts 64-bit and elevated, takes the single-instance mutex (AbandonedMutexException = acquired);
+/// 2a. resolves the game folder (<see cref="GameFolderResolver"/>; a dialog only when nothing is found);
 /// 3-9. <see cref="HostRuntime.Start"/>, then the tray message loop.
 /// </summary>
 internal static class Program
@@ -31,6 +32,9 @@ internal static class Program
 
     /// <summary>Another host owns the mutex.</summary>
     public const int ExitAlreadyRunning = 67;
+
+    /// <summary>The game folder was not found and the user chose Exit in the start dialog.</summary>
+    public const int ExitNoGameFolder = 68;
 
     [STAThread]
     private static int Main(string[] args)
@@ -72,7 +76,16 @@ internal static class Program
             return ExitAlreadyRunning;
         }
 
-        var paths = CompanionPaths.Default(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+        // the game folder, found once before the host starts (no environment variable needed): TOS_GAME_DIR, the saved
+        // folder, the running game, the usual places, else a small dialog; a found or chosen folder is saved
+        var gameDir = ResolveGameFolder(identity.User);
+        if (gameDir is null)
+        {
+            mutex.ReleaseMutex();
+            return ExitNoGameFolder;
+        }
+
+        var paths = CompanionPaths.ForGame(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), gameDir);
 
         // fatal-error recorder (2026-10-23: the host vanished mid-job with nothing written anywhere): any unhandled error
         // leaves a crash report in the diagnostics folder; a UI-thread error is reported instead of ending the app
@@ -98,6 +111,33 @@ internal static class Program
         {
             mutex.ReleaseMutex();
         }
+    }
+
+    /// <summary>
+    /// The game folder for this start (<see cref="GameFolderResolver"/>); null when the user pressed Exit in the dialog.
+    /// The runtime folder is secured first (the host does it again at start) so a found folder can be saved there.
+    /// </summary>
+    private static string? ResolveGameFolder(SecurityIdentifier user)
+    {
+        var runtimeDir = CompanionPaths.DefaultRuntimeDir;
+        var canSave = RuntimeDirectory.EnsureProtected(runtimeDir, user) is null;
+        var store = new GameFolderStore(runtimeDir);
+        var choice = GameFolderResolver.Resolve(
+            Environment.GetEnvironmentVariable(CompanionPaths.GameDirVariable),
+            store.Read(),
+            GameFolderResolver.DetectOnThisPc,
+            GameFolderDialog.AskAtStart);
+        if (choice is null)
+        {
+            return null;
+        }
+
+        if (choice.ShouldSave && canSave)
+        {
+            store.Save(choice.Folder); // a failed save only means the search runs again next time
+        }
+
+        return choice.Folder;
     }
 
     /// <summary>A short-lived, non-activating balloon: "already running".</summary>

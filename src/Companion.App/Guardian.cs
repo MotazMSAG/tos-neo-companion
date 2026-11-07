@@ -55,7 +55,11 @@ internal static class Guardian
     /// <summary>Runs the guardian; returns the process exit code.</summary>
     public static int Run(GuardianArgs args)
     {
-        var paths = CompanionPaths.Default(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
+        // the same game folder as the host, without any UI: TOS_GAME_DIR, then the saved folder, then the default
+        var gameDir = GameFolderResolver.ForGuardian(
+            Environment.GetEnvironmentVariable(CompanionPaths.GameDirVariable),
+            new GameFolderStore(CompanionPaths.DefaultRuntimeDir).Read());
+        var paths = CompanionPaths.ForGame(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), gameDir);
         AppDomain.CurrentDomain.UnhandledException += (_, e) => CrashLog.Write(paths.RuntimeDir, "guardian", e.ExceptionObject as Exception);
         var exitCode = WaitForHostExit(args);
 

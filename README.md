@@ -62,12 +62,12 @@ No programming tools needed.
 download `TOS-NEO-Companion-…-win-x64.zip` (under "Assets"). Unzip it to a folder of its own, for example
 `C:\TOS-companion`.
 
-**3. Tell it where the game is** (skip this if your game is in `D:\Games\TOS`).
-
-1. Press **Win+R**, paste `rundll32 sysdm.cpl,EditEnvironmentVariables` and press Enter.
-2. Under "User variables" click **New...**.
-3. Variable name: `TOS_GAME_DIR`. Variable value: your game folder, the one that holds `TOS.exe` and the `Log`
-   folder (for example `C:\Games\TOS`). Click OK twice.
+**3. The game folder is found by itself.** Nothing to set up. At start the companion looks at the running game,
+then at the usual places (`D:\Games\TOS`, and on every drive `\Games\TOS`, `\TOS`, `\Program Files\TOS`,
+`\Program Files (x86)\TOS`). If it cannot find the game, a small window asks you to start the game and press
+**Try again**, or to **Choose folder...** (the one with `TOS.exe`). The folder is remembered for the next start. To
+change it later: tray > **Advanced** > **Game folder...**, then restart the companion. (Power users can still set the
+`TOS_GAME_DIR` environment variable; it wins over everything else.)
 
 **4. Your time zone** (skip this if your PC is set to UTC+3). See [Your time zone](#your-time-zone) below. Do it
 **before** step 6, because the app checks that its files have not changed since you trusted them.

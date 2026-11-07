@@ -340,7 +340,11 @@ internal sealed class FakeWin32(FakeClock clock) : IWin32
 
     public bool IsCurrentProcessElevated() => Elevated;
 
-    public (long Size, DateTime WriteUtc)? GetFileMetadata(string path) => (1234, new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc));
+    /// <summary>File metadata per path; null keeps the default (every file exists with the same size and time).</summary>
+    public Func<string, (long Size, DateTime WriteUtc)?>? FileMetadata { get; set; }
+
+    public (long Size, DateTime WriteUtc)? GetFileMetadata(string path) =>
+        FileMetadata is { } f ? f(path) : (1234, new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc));
 
     public object? ReadGameRegistryValue(string valueName)
     {

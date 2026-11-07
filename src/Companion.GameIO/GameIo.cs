@@ -73,6 +73,9 @@ public sealed partial class GameIo : IGameIo
     private readonly List<(DateTime Start, DateTime? End)> _ourInputs = [];
 
     private GameIdentity? _identity;
+
+    /// <summary>The latest connect problem as an int (-1 before the first connect); read from any thread.</summary>
+    private int _lastConnectProblem = -1;
     private ChokePoint? _choke;
 
     /// <summary>Since when the game's own window has been the foreground window without a break (null: not foreground).</summary>
@@ -161,6 +164,9 @@ public sealed partial class GameIo : IGameIo
     public PacingStatus Pacing => _pacing.Status();
 
     /// <inheritdoc />
+    public ConnectProblem? LastConnectProblem => Volatile.Read(ref _lastConnectProblem) is var p and >= 0 ? (ConnectProblem)p : null;
+
+    /// <inheritdoc />
     public bool GameWindowPresent() =>
         (Identity is { } id && ValidateIdentity(id)) || GameWindowFinder.Find(_win32, _paths.GameExePath).Problem == ConnectProblem.None;
 
@@ -228,6 +234,7 @@ public sealed partial class GameIo : IGameIo
                 _samplerTimer ??= new Timer(_ => SafeSamplerTick(), null, SamplerPeriod, SamplerPeriod);
             }
 
+            Volatile.Write(ref _lastConnectProblem, (int)ConnectProblem.None);
             Journal(JournalKind.Log, null, ("event", "connect"), ("problem", nameof(ConnectProblem.None)), ("build", build?.Code), ("fullscreenMode", prefs.FullscreenMode));
             return new ConnectResult(ConnectProblem.None, identity, prefs, build);
         }
@@ -330,6 +337,7 @@ public sealed partial class GameIo : IGameIo
 
     private ConnectResult ConnectFail(ConnectProblem problem)
     {
+        Volatile.Write(ref _lastConnectProblem, (int)problem);
         Journal(JournalKind.Log, null, ("event", "connect"), ("problem", problem.ToString()));
         return new ConnectResult(problem, null, null, null);
     }
