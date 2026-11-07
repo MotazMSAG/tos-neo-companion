@@ -1,0 +1,30 @@
+TOS NEO Companion - start here
+==============================
+
+Full guide: https://github.com/MotazMSAG/tos-neo-companion#quick-start-for-players
+
+Before the first start
+  1. Windows display scaling must be 100%:
+     Settings > System > Display > Scale = 100%.
+  2. The game: windowed mode, maximized, on a 1920x1080 monitor, English client.
+  3. Game folder: if the game is NOT in D:\Games\TOS, tell the companion where it is.
+     Press Win+R, type:  rundll32 sysdm.cpl,EditEnvironmentVariables
+     Under "User variables" click New...  Name: TOS_GAME_DIR   Value: your game folder
+     (the folder that holds TOS.exe and the Log folder), then OK.
+  4. Daily reset times are set for UTC+3. If your PC is in another time zone,
+     see "Your time zone" in the guide BEFORE step 6.
+
+First start
+  5. Double-click Companion.App.exe. Windows may say "Windows protected your PC":
+     click "More info", then "Run anyway". Click Yes on the admin prompt.
+  6. A tray icon appears near the clock. Right-click it > Advanced > Trust this build...
+     Nothing runs before that.
+  7. Left-click the tray icon: the window opens on the Today checklist. It only reads the
+     game's log and never clicks: it is ready.
+
+Crafting automation (optional)
+  8. Right-click the tray icon > Advanced > Automation > Crafting (turn it on).
+  9. With the game running, press "Scan all recipes" in the companion's Craft tab (5-20 minutes).
+
+Stop everything: Ctrl+Alt+Pause, or tray > Stop now.
+Uninstall: tray > Exit, delete this folder, and delete C:\ProgramData\TOS-companion.
