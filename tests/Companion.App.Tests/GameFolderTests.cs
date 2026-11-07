@@ -184,10 +184,32 @@ public sealed class GameFolderTests
     {
         var a = MakeGame(TestDirs.NewPath("var"));
         var b = MakeGame(TestDirs.NewPath("saved"));
-        Assert.AreEqual(a, GameFolderResolver.ForGuardian(a, b));
-        Assert.AreEqual(b, GameFolderResolver.ForGuardian(null, b));
-        Assert.AreEqual(b, GameFolderResolver.ForGuardian(TestDirs.NewPath("bad"), b));
-        Assert.AreEqual(CompanionPaths.DefaultGameDir, GameFolderResolver.ForGuardian(null, TestDirs.NewPath("gone")));
+        Assert.AreEqual(a, GameFolderResolver.ForGuardian(null, a, b));
+        Assert.AreEqual(b, GameFolderResolver.ForGuardian(null, null, b));
+        Assert.AreEqual(b, GameFolderResolver.ForGuardian(null, TestDirs.NewPath("bad"), b));
+        Assert.AreEqual(CompanionPaths.DefaultGameDir, GameFolderResolver.ForGuardian(null, null, TestDirs.NewPath("gone")));
+    }
+
+    [TestMethod]
+    public void TheGuardian_PrefersTheHostsFolder_EvenWhenNothingWasSaved()
+    {
+        // review 2026-11-08: a host folder found by a search but not saved made the guardian check another TOS.exe and
+        // delete the slide marker instead of moving the window home
+        var host = MakeGame(TestDirs.NewPath("host"));
+        var other = MakeGame(TestDirs.NewPath("other"));
+        Assert.AreEqual(host, GameFolderResolver.ForGuardian(host, other, other));
+        Assert.AreEqual(host, GameFolderResolver.ForGuardian(host, null, null));
+        Assert.AreEqual(other, GameFolderResolver.ForGuardian(TestDirs.NewPath("hostGone"), other, null));
+    }
+
+    [TestMethod]
+    public void TheHostsFolder_ReachesTheGuardian_ThroughItsCommandLine()
+    {
+        var host = MakeGame(TestDirs.NewPath(Path.Combine("with space", "TOS")));
+        var args = new GuardianArgs(1234, 638950000000000000L, host);
+        var parsed = GuardianArgs.TryParse(args.ToArgumentList());
+        Assert.AreEqual(args, parsed);
+        Assert.AreEqual(host, GameFolderResolver.ForGuardian(parsed!.GameDir, null, null));
     }
 
     [TestMethod]

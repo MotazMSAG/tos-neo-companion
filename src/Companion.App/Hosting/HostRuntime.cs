@@ -691,8 +691,9 @@ internal sealed class HostRuntime : IDisposable
             }
 
             using var self = Process.GetCurrentProcess();
-            var args = new GuardianArgs(Environment.ProcessId, self.StartTime.ToUniversalTime().Ticks);
-            var info = new ProcessStartInfo(exe, args.ToArguments())
+            // the guardian gets this host's exact game folder, so its exe-path identity check matches the host's
+            var args = new GuardianArgs(Environment.ProcessId, self.StartTime.ToUniversalTime().Ticks, _paths.GameDir);
+            var info = new ProcessStartInfo(exe, args.ToArgumentList())
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,

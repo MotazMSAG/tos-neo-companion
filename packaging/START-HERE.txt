@@ -7,10 +7,14 @@ Before the first start
   1. Windows display scaling must be 100%:
      Settings > System > Display > Scale = 100%.
   2. The game: windowed mode, maximized, on a 1920x1080 monitor, English client.
-  3. Game folder: if the game is NOT in D:\Games\TOS, tell the companion where it is.
-     Press Win+R, type:  rundll32 sysdm.cpl,EditEnvironmentVariables
-     Under "User variables" click New...  Name: TOS_GAME_DIR   Value: your game folder
-     (the folder that holds TOS.exe and the Log folder), then OK.
+  3. Game folder: nothing to set up, it is found by itself. At start the companion looks
+     at the running game, then at the usual places (D:\Games\TOS, and on every drive
+     \Games\TOS, \TOS, \Program Files\TOS, \Program Files (x86)\TOS). If it cannot find
+     the game, a small window asks you to start the game and press "Try again", or to
+     "Choose folder..." (the one with TOS.exe). The folder is remembered for the next start.
+     To change it later: tray > Advanced > Game folder..., then restart the companion.
+     (Power users can still set the TOS_GAME_DIR environment variable; it wins over
+     everything else.)
   4. Daily reset times are set for UTC+3. If your PC is in another time zone,
      see "Your time zone" in the guide BEFORE step 6.
 

@@ -36,7 +36,7 @@ internal sealed record GameFolderChoice(string Folder, GameFolderSource Source)
 /// Finds the game folder without the player editing anything (host start, SPEC 4). Order: TOS_GAME_DIR when it names a
 /// folder with TOS.exe; the saved folder when it still holds TOS.exe; the running game's folder (read-only, through
 /// <see cref="GameFolderLocator"/>); the usual install places (existence checks only); otherwise the start dialog asks.
-/// The guardian uses the first two steps and the default, never a dialog. Folders found by the companion itself must
+/// The guardian uses the host's folder from its command line, else the first two steps and the default, never a dialog. Folders found by the companion itself must
 /// hold TOS.exe AND GameAssembly.dll; a folder the user names needs TOS.exe only.
 /// </summary>
 internal static class GameFolderResolver
@@ -106,8 +106,13 @@ internal static class GameFolderResolver
         return CompanionPaths.NormalizeGameDir(ask(detect)) is { } chosen ? new GameFolderChoice(chosen, GameFolderSource.UserChoice) : null;
     }
 
-    /// <summary>The guardian's folder (no UI, nothing searched): the variable, then the saved folder, then the default.</summary>
-    public static string ForGuardian(string? variable, string? saved) => FromSettings(variable, saved)?.Folder ?? CompanionPaths.DefaultGameDir;
+    /// <summary>
+    /// The guardian's folder (no UI, nothing searched): the folder the host passed on the guardian command line when it
+    /// still holds TOS.exe (so both processes check the same TOS.exe even when the host's folder was not saved), then the
+    /// variable, then the saved folder, then the default.
+    /// </summary>
+    public static string ForGuardian(string? fromHost, string? variable, string? saved) =>
+        CompanionPaths.NormalizeGameDir(fromHost) ?? FromSettings(variable, saved)?.Folder ?? CompanionPaths.DefaultGameDir;
 
     /// <summary>
     /// The usual install places in order: D:\Games\TOS first, then for every given drive root X:\Games\TOS, X:\TOS,

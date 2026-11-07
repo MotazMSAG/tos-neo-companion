@@ -99,6 +99,22 @@ public sealed partial class StaticLoaderTests
     }
 
     [TestMethod]
+    public void TheCrashHandlers_AreInstalled_BeforeTheStartDialog()
+    {
+        // review 2026-11-08: WinForms refuses SetUnhandledExceptionMode once a window exists on the thread, so the game
+        // folder dialog (shown inside ResolveGameFolder) must come after it, or every user who sees the dialog crashes
+        var program = File.ReadAllText(Path.Combine(Root(), "src", "Companion.App", "Program.cs"));
+        var main = program.IndexOf("static int Main(", StringComparison.Ordinal);
+        var install = program.IndexOf("InstallCrashHandlers(", main, StringComparison.Ordinal);
+        var resolve = program.IndexOf("ResolveGameFolder(", main, StringComparison.Ordinal);
+        Assert.IsTrue(main >= 0 && install > main && resolve > install, "Main must call InstallCrashHandlers before ResolveGameFolder");
+        var mode = program.IndexOf("Application.SetUnhandledExceptionMode(UnhandledExceptionMode.", StringComparison.Ordinal);
+        var installBody = program.IndexOf("private static void InstallCrashHandlers(", StringComparison.Ordinal);
+        Assert.IsTrue(installBody >= 0 && mode > installBody, "the exception mode is set inside InstallCrashHandlers only");
+        Assert.AreEqual(mode, program.LastIndexOf("Application.SetUnhandledExceptionMode(UnhandledExceptionMode.", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
     public void TheSolution_ContainsEveryProject()
     {
         var root = Root();

@@ -3,6 +3,7 @@ using System.Security.Principal;
 using Companion.App.Hosting;
 using Companion.App.Tray;
 using Companion.Contracts;
+using Companion.Contracts.Engine;
 
 namespace Companion.App;
 
@@ -76,32 +77,29 @@ internal static class Program
             return ExitAlreadyRunning;
         }
 
+        // fatal-error recorder (2026-10-23: the host vanished mid-job with nothing written anywhere): any unhandled error
+        // leaves a crash report in the diagnostics folder; a UI-thread error is reported instead of ending the app.
+        // This must come before the start dialog below: WinForms refuses to change the exception mode once a window
+        // exists on this thread (review 2026-11-08: the first start after choosing a folder crashed here).
+        InstallCrashHandlers(CompanionPaths.DefaultRuntimeDir);
+
         // the game folder, found once before the host starts (no environment variable needed): TOS_GAME_DIR, the saved
         // folder, the running game, the usual places, else a small dialog; a found or chosen folder is saved
-        var gameDir = ResolveGameFolder(identity.User);
-        if (gameDir is null)
+        var resolved = ResolveGameFolder(identity.User);
+        if (resolved is null)
         {
             mutex.ReleaseMutex();
             return ExitNoGameFolder;
         }
 
-        var paths = CompanionPaths.ForGame(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), gameDir);
-
-        // fatal-error recorder (2026-10-23: the host vanished mid-job with nothing written anywhere): any unhandled error
-        // leaves a crash report in the diagnostics folder; a UI-thread error is reported instead of ending the app
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => CrashLog.Write(paths.RuntimeDir, "unhandled", e.ExceptionObject as Exception);
-        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-        Application.ThreadException += (_, e) => CrashLog.Write(paths.RuntimeDir, "uiThread", e.Exception);
-        TaskScheduler.UnobservedTaskException += (_, e) =>
-        {
-            CrashLog.Write(paths.RuntimeDir, "task", e.Exception);
-            e.SetObserved();
-        };
+        var paths = CompanionPaths.ForGame(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), resolved.Value.Choice.Folder);
 
         try
         {
-            using var host = new HostRuntime(paths, new SystemClock(), identity.User);
+            var clock = new SystemClock();
+            using var host = new HostRuntime(paths, clock, identity.User);
             host.Start();
+            JournalGameFolder(host, clock, resolved.Value.Choice, resolved.Value.Saved);
             using var tray = new TrayApp(host);
             Application.Run(tray);
             host.Shutdown();
@@ -114,10 +112,28 @@ internal static class Program
     }
 
     /// <summary>
-    /// The game folder for this start (<see cref="GameFolderResolver"/>); null when the user pressed Exit in the dialog.
-    /// The runtime folder is secured first (the host does it again at start) so a found folder can be saved there.
+    /// The fatal-error recorder. Must run before any window is created on the main thread (the start dialog included):
+    /// <see cref="Application.SetUnhandledExceptionMode(UnhandledExceptionMode)"/> throws once one exists.
     /// </summary>
-    private static string? ResolveGameFolder(SecurityIdentifier user)
+    private static void InstallCrashHandlers(string runtimeDir)
+    {
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => CrashLog.Write(runtimeDir, "unhandled", e.ExceptionObject as Exception);
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+        Application.ThreadException += (_, e) => CrashLog.Write(runtimeDir, "uiThread", e.Exception);
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            CrashLog.Write(runtimeDir, "task", e.Exception);
+            e.SetObserved();
+        };
+    }
+
+    /// <summary>
+    /// The game folder for this start (<see cref="GameFolderResolver"/>) and whether it was saved; null when the user
+    /// pressed Exit in the dialog. The runtime folder is secured first (the host does it again at start) so a found folder
+    /// can be saved there. A failed save is journaled after the host starts; the guardian gets the folder on its command
+    /// line, so it never depends on the saved file.
+    /// </summary>
+    private static (GameFolderChoice Choice, bool? Saved)? ResolveGameFolder(SecurityIdentifier user)
     {
         var runtimeDir = CompanionPaths.DefaultRuntimeDir;
         var canSave = RuntimeDirectory.EnsureProtected(runtimeDir, user) is null;
@@ -132,12 +148,31 @@ internal static class Program
             return null;
         }
 
-        if (choice.ShouldSave && canSave)
-        {
-            store.Save(choice.Folder); // a failed save only means the search runs again next time
-        }
+        bool? saved = choice.ShouldSave ? canSave && store.Save(choice.Folder) : null;
+        return (choice, saved);
+    }
 
-        return choice.Folder;
+    /// <summary>Journals where the game folder came from, and a failed save (the search then runs again next start).</summary>
+    private static void JournalGameFolder(HostRuntime host, IClock clock, GameFolderChoice choice, bool? saved)
+    {
+        try
+        {
+            if (host.Services is not { } s)
+            {
+                return;
+            }
+
+            s.Journal.Write(new JournalRecord(clock.UtcNow, saved is false ? JournalKind.Incident : JournalKind.HostStart, null, null, null, new Dictionary<string, object?>(StringComparer.Ordinal)
+            {
+                ["event"] = saved is false ? "gameFolder.saveFailed" : "gameFolder",
+                ["source"] = choice.Source.ToString(),
+                ["saved"] = saved,
+            }));
+        }
+        catch (Exception)
+        {
+            // the journal is a record only; the host runs on
+        }
     }
 
     /// <summary>A short-lived, non-activating balloon: "already running".</summary>

@@ -217,8 +217,13 @@ public sealed class GuardianArgsTests
         Assert.IsNotNull(g);
         Assert.AreEqual(1234, g.HostPid);
         Assert.AreEqual(638950000000000000L, g.HostStartTicks);
-        Assert.AreEqual("--guardian 1234 638950000000000000", g.ToArguments());
-        Assert.AreEqual(g, GuardianArgs.TryParse(g.ToArguments().Split(' ')));
+        Assert.IsNull(g.GameDir);
+        CollectionAssert.AreEqual(new[] { "--guardian", "1234", "638950000000000000" }, g.ToArgumentList().ToArray());
+        Assert.AreEqual(g, GuardianArgs.TryParse(g.ToArgumentList()));
+        var withDir = GuardianArgs.TryParse(["--guardian", "1234", "638950000000000000", @"E:\Program Files\TOS"]);
+        Assert.IsNotNull(withDir);
+        Assert.AreEqual(@"E:\Program Files\TOS", withDir.GameDir);
+        CollectionAssert.AreEqual(new[] { "--guardian", "1234", "638950000000000000", @"E:\Program Files\TOS" }, withDir.ToArgumentList().ToArray());
         Assert.IsTrue(GuardianArgs.IsGuardian(["--guardian"]));
         Assert.IsFalse(GuardianArgs.IsGuardian([]));
         Assert.IsFalse(GuardianArgs.IsGuardian(["status", "--guardian"]));
@@ -228,6 +233,9 @@ public sealed class GuardianArgsTests
     [DataRow(new[] { "--guardian" })]
     [DataRow(new[] { "--guardian", "1234" })]
     [DataRow(new[] { "--guardian", "1234", "5", "extra" })]
+    [DataRow(new[] { "--guardian", "1234", "5", "" })]
+    [DataRow(new[] { "--guardian", "1234", "5", @"Games\TOS" })]
+    [DataRow(new[] { "--guardian", "1234", "5", @"E:\TOS", "extra" })]
     [DataRow(new[] { "--guardian", "abc", "5" })]
     [DataRow(new[] { "--guardian", "-1", "5" })]
     [DataRow(new[] { "--guardian", "+12", "5" })]

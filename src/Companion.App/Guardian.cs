@@ -6,10 +6,14 @@ using Companion.Contracts.Engine;
 
 namespace Companion.App;
 
-/// <summary>Parsed guardian arguments: <c>--guardian &lt;hostPid&gt; &lt;hostStartTicks&gt;</c>.</summary>
+/// <summary>Parsed guardian arguments: <c>--guardian &lt;hostPid&gt; &lt;hostStartTicks&gt; [&lt;gameDir&gt;]</c>.</summary>
 /// <param name="HostPid">Host process id.</param>
 /// <param name="HostStartTicks">Host process start time (UTC ticks), so a recycled PID is never mistaken for the host.</param>
-internal sealed record GuardianArgs(int HostPid, long HostStartTicks)
+/// <param name="GameDir">
+/// The game folder the host uses (a full path), so the guardian checks the same TOS.exe even when the host's folder was
+/// found by a search and could not be saved; null from an older host.
+/// </param>
+internal sealed record GuardianArgs(int HostPid, long HostStartTicks, string? GameDir = null)
 {
     /// <summary>The switch.</summary>
     public const string Switch = "--guardian";
@@ -18,10 +22,13 @@ internal sealed record GuardianArgs(int HostPid, long HostStartTicks)
     public static bool IsGuardian(IReadOnlyList<string> args) =>
         args.Count > 0 && string.Equals(args[0], Switch, StringComparison.Ordinal);
 
-    /// <summary>Parses exactly <c>--guardian pid ticks</c> (positive integers, nothing else); null otherwise.</summary>
+    /// <summary>
+    /// Parses exactly <c>--guardian pid ticks</c> (positive integers) with an optional fourth argument, the game folder as
+    /// a fully qualified path; null otherwise.
+    /// </summary>
     public static GuardianArgs? TryParse(IReadOnlyList<string> args)
     {
-        if (args.Count != 3 || !IsGuardian(args))
+        if (args.Count is not (3 or 4) || !IsGuardian(args))
         {
             return null;
         }
@@ -37,12 +44,47 @@ internal sealed record GuardianArgs(int HostPid, long HostStartTicks)
             return null;
         }
 
-        return new GuardianArgs(pid, ticks);
+        string? gameDir = null;
+        if (args.Count == 4)
+        {
+            gameDir = args[3];
+            if (string.IsNullOrWhiteSpace(gameDir) || !IsFullPath(gameDir))
+            {
+                return null;
+            }
+        }
+
+        return new GuardianArgs(pid, ticks, gameDir);
     }
 
-    /// <summary>The command line the host uses to start its guardian.</summary>
-    public string ToArguments() =>
-        string.Create(CultureInfo.InvariantCulture, $"{Switch} {HostPid} {HostStartTicks}");
+    /// <summary>The arguments the host starts its guardian with (one entry per argument; the runtime quotes them).</summary>
+    public IReadOnlyList<string> ToArgumentList()
+    {
+        var list = new List<string>
+        {
+            Switch,
+            HostPid.ToString(CultureInfo.InvariantCulture),
+            HostStartTicks.ToString(CultureInfo.InvariantCulture),
+        };
+        if (GameDir is not null)
+        {
+            list.Add(GameDir);
+        }
+
+        return list;
+    }
+
+    private static bool IsFullPath(string path)
+    {
+        try
+        {
+            return Path.IsPathFullyQualified(path);
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
 }
 
 /// <summary>
@@ -55,8 +97,10 @@ internal static class Guardian
     /// <summary>Runs the guardian; returns the process exit code.</summary>
     public static int Run(GuardianArgs args)
     {
-        // the same game folder as the host, without any UI: TOS_GAME_DIR, then the saved folder, then the default
+        // the same game folder as the host, without any UI: the folder the host passed, else TOS_GAME_DIR, then the
+        // saved folder, then the default
         var gameDir = GameFolderResolver.ForGuardian(
+            args.GameDir,
             Environment.GetEnvironmentVariable(CompanionPaths.GameDirVariable),
             new GameFolderStore(CompanionPaths.DefaultRuntimeDir).Read());
         var paths = CompanionPaths.ForGame(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), gameDir);
