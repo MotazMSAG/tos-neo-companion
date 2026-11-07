@@ -103,24 +103,12 @@ Everything the app shows and every message is explained in the [user manual](doc
 
 ## Your time zone
 
-The daily checklist decides when a new day starts by the clock. Its times are written for a PC set to
-**UTC+3** (the author's):
+Nothing to do. The daily checklist's times (daily reset 07:00, calendar day 02:00, weekly reset Monday 07:00 and
+the event times) are written for UTC+3 in `data\dailies.json` (`"timesUtcOffset": "+03:00"`). The app moves them to
+your PC's time zone by itself, so a PC at UTC+1 sees the daily reset at 05:00 and the 21:44 big raccoon at 19:44.
 
-- daily reset at 07:00;
-- calendar day at 02:00;
-- weekly reset on Monday at 07:00;
-- event times such as the guild raccoons and the world boss.
-
-If your PC uses another time zone, shift these times by the difference:
-
-1. Open `data\dailies.json` (in the unzipped folder) with Notepad.
-2. Change the `"resets"` line near the top, and every `"at": "HH:MM"` value further down.
-   - Example: your PC is UTC+1, so subtract 2 hours. `"daily": "07:00:00"` becomes `"05:00:00"`, and
-     `"at": "21:44"` becomes `"19:44"`.
-3. Save. If you already trusted the build, choose **Advanced > Trust this build...** again.
-
-Players on another server region may also have different reset times. Watch when the in-game dailies reset and
-use that time.
+The first time the game log shows a daily reset while the game runs, the app also learns the real reset time and
+uses it from then on. That covers other server regions and daylight saving. Do not edit the times in the file.
 
 ## Build from source (developers)
 

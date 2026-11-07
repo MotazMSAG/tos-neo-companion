@@ -4,7 +4,7 @@ namespace Companion.Dailies;
 
 /// <summary>
 /// Days and open times of the checklist's items (learning day, entries 16/17/40). A game day starts at the daily reset
-/// (07:00), so a window at 00:00 or 02:00 belongs to the night after that day's evening. Pure functions.
+/// (07:00 in the data file), so a window at 00:00 or 02:00 belongs to the night after that day's evening. Pure functions.
 /// </summary>
 public static class DailySchedule
 {
@@ -25,8 +25,15 @@ public static class DailySchedule
                 continue;
             }
 
-            var date = at.ToTimeSpan() >= dailyReset ? gameDay : gameDay.AddDays(1);
-            var start = date.ToDateTime(at);
+            // the window's place in the game day: how long after the reset it opens (also right for a shifted reset that
+            // lies before 00:00 or after 24:00, see DailyResets)
+            var afterReset = (at.ToTimeSpan() - dailyReset).Ticks % TimeSpan.TicksPerDay;
+            if (afterReset < 0)
+            {
+                afterReset += TimeSpan.TicksPerDay;
+            }
+
+            var start = gameDay.ToDateTime(TimeOnly.MinValue) + dailyReset + TimeSpan.FromTicks(afterReset);
             list.Add(new DailyTimeSpan(start, start.AddMinutes(w.Minutes)));
         }
 

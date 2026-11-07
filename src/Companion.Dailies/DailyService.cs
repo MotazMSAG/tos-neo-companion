@@ -14,6 +14,10 @@ namespace Companion.Dailies;
 /// <item>feeds every poll's events, finished jobs and the user's ticks;</item>
 /// <item>saves <see cref="TakeStateToSave"/> when it returns bytes (at most once a second).</item>
 /// </list>
+/// Time zones (2026-11-08): the data file's times are written for one UTC offset ('timesUtcOffset'). The tracker runs
+/// on a copy shifted to the PC's clock (<see cref="DailyCatalog.Shifted"/>): by the shift learned from the game log's
+/// daily update when one was seen (it also covers other server regions), else by the PC's UTC offset minus the file's.
+/// A new shift re-derives the copy and recounts through the same path as a changed data file.
 /// </summary>
 public sealed class DailyService
 {
@@ -25,58 +29,105 @@ public sealed class DailyService
     };
 
     private readonly object _gate = new();
-    private readonly DailyTracker _tracker;
+    private readonly DailyCatalog _file;
     private readonly Func<DateTime> _nowLocal;
+    private readonly Func<DateTime, TimeSpan>? _pcUtcOffset;
+
+    /// <summary>
+    /// The log fed since the start-up replay began, in order (dropped once older than a day before the earliest current
+    /// period): what a new shift is counted again from. The replay already held this much in memory.
+    /// </summary>
+    private readonly List<LogEvent> _kept = [];
+
+    private DailyTracker _tracker;
     private List<LogEvent>? _buffer = [];
     private long _savedVersion;
     private DailyPrefs _prefs = new();
     private bool _prefsDirty;
+    private (DateTime At, long Offset) _keptLast = (DateTime.MinValue, -1);
+
+    /// <summary>The shift the tracker's catalog was made with.</summary>
+    private TimeSpan _shift;
+
+    /// <summary>
+    /// The server's daily update as a UTC time of day, learned from the log. It depends on neither the data file nor the
+    /// PC's offset, so a re-based data file or a daylight-saving change is followed without waiting for the next update.
+    /// </summary>
+    private TimeSpan? _learned;
+
+    /// <summary>A new learned shift waits to be saved.</summary>
+    private bool _learnedDirty;
 
     /// <summary>
     /// Creates the service. <paramref name="saved"/> is the state bytes from disk and <paramref name="prefs"/> the
-    /// "Edit my list" choices (null or damaged = start empty / with the defaults).
+    /// "Edit my list" choices (null or damaged = start empty / with the defaults). <paramref name="pcUtcOffset"/> gives
+    /// the PC's UTC offset at a local time (the host passes <see cref="PcUtcOffset"/>); null means the PC keeps the data
+    /// file's own offset (tests), and a shift learned from the log still applies.
     /// </summary>
-    public DailyService(DailyCatalog catalog, byte[]? saved, Func<DateTime> nowLocal, byte[]? prefs = null)
+    public DailyService(DailyCatalog catalog, byte[]? saved, Func<DateTime> nowLocal, byte[]? prefs = null, Func<DateTime, TimeSpan>? pcUtcOffset = null)
     {
-        _tracker = new DailyTracker(catalog);
+        ArgumentNullException.ThrowIfNull(catalog);
+        _file = catalog;
         _nowLocal = nowLocal;
+        _pcUtcOffset = pcUtcOffset;
         if (prefs is not null && DeserializePrefs(prefs) is { } p)
         {
             _prefs = p;
-            _tracker.SetCustomItems(p.Custom);
         }
 
-        if (saved is not null && Deserialize(saved) is { } state)
+        var state = saved is null ? null : Deserialize(saved);
+        StateProblem = saved is not null && state is null ? "dailies.stateUnreadable" : null;
+        if (state is { LearnedResetUtcMinutes: { } utc and >= 0 and < 24 * 60 })
         {
-            if (state.Catalog != catalog.Fingerprint)
-            {
-                // Counted with other rules: keep the history before today's replay and the user's ticks, and let the
-                // replay count today again with the new rules. Stored counts stay: each knows when it was last right, and
-                // the replay only applies what came after (2026-11-05: dropping them restarted the special train at 0
-                // and showed 3/6 for the game's 0/6). Cards rebuild from the replay. Counts are forgotten in CompleteReplay,
-                // and only from where the replayed log begins: older log files are gone (Honor War's 12 rounds of
-                // Tuesday 01:20-01:50 lived only in log.bak2 by Thursday).
-                _recountFrom = _tracker.ReplayFrom(nowLocal());
-                state = state with { Watermark = DateTime.MinValue, Producers = null };
-                Recounted = true;
-            }
-
-            _tracker.Import(state);
-            StateProblem = null;
-        }
-        else
-        {
-            StateProblem = saved is null ? null : "dailies.stateUnreadable";
+            _learned = TimeSpan.FromMinutes(utc);
         }
 
+        var now = nowLocal();
+        _tracker = Build(ShiftAt(now), state, now);
         _savedVersion = _tracker.Version;
     }
+
+    /// <summary>
+    /// The production source of the PC's UTC offset at a local time (the Windows time zone, daylight saving included):
+    /// the only place in this module that reads the PC's time zone.
+    /// </summary>
+    public static TimeSpan PcUtcOffset(DateTime local) => TimeZoneInfo.Local.GetUtcOffset(local);
 
     /// <summary>'dailies.stateUnreadable' when the saved state could not be read (the list started empty).</summary>
     public string? StateProblem { get; }
 
-    /// <summary>True when the saved counts were made with another data file and today is counted again from the log.</summary>
-    public bool Recounted { get; }
+    /// <summary>
+    /// True when the saved counts were made with another data file or another time shift, and today is counted again
+    /// from the log.
+    /// </summary>
+    public bool Recounted => Recounts > 0;
+
+    /// <summary>How many times the counts were re-derived (a changed data file or a new time shift).</summary>
+    public int Recounts { get; private set; }
+
+    /// <summary>How far the data file's times are moved to reach the PC's clock.</summary>
+    public TimeSpan Shift
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _shift;
+            }
+        }
+    }
+
+    /// <summary>The shift the game log's daily update gives now (null until one was seen).</summary>
+    public TimeSpan? LearnedShift
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return _learned is null ? null : ShiftAt(_nowLocal());
+            }
+        }
+    }
 
     /// <summary>True until <see cref="CompleteReplay"/> ran.</summary>
     public bool Replaying
@@ -102,32 +153,40 @@ public sealed class DailyService
         }
     }
 
-    /// <summary>Feeds the replayed events (log order), then everything that arrived live meanwhile.</summary>
+    /// <summary>
+    /// Feeds the replayed events (log order), then everything that arrived live meanwhile. The newest daily update among
+    /// them sets the learned shift first, so the replay is counted once, with the right times.
+    /// </summary>
     public void CompleteReplay(IEnumerable<LogEvent> replayed)
     {
         ArgumentNullException.ThrowIfNull(replayed);
         var events = replayed as IReadOnlyList<LogEvent> ?? [.. replayed];
         lock (_gate)
         {
-            if (_recountFrom is { } recount)
-            {
-                // nothing replayed (no log): keep every saved count
-                var logBegins = events.Count > 0 ? events.Min(e => e.Timestamp) : DateTime.MaxValue;
-                _tracker.ForgetCountsFrom(logBegins > recount ? logBegins : recount);
-                _recountFrom = null;
-            }
-
-            foreach (var e in events)
-            {
-                _tracker.Feed(e);
-            }
-
-            foreach (var e in _buffer ?? [])
-            {
-                _tracker.Feed(e);
-            }
-
+            var now = _nowLocal();
+            List<LogEvent> all = [.. events, .. _buffer ?? []];
             _buffer = null;
+            foreach (var r in all.OfType<ResetLogEvent>())
+            {
+                Learn(r);
+            }
+
+            var shift = ShiftAt(now);
+            if (shift != _shift)
+            {
+                _tracker = Build(shift, _tracker.Export(), now);
+            }
+
+            Recount(events);
+            foreach (var e in all)
+            {
+                if (Keep(e))
+                {
+                    _tracker.Feed(e);
+                }
+            }
+
+            Trim(now);
         }
     }
 
@@ -143,10 +202,24 @@ public sealed class DailyService
                 return;
             }
 
+            var now = _nowLocal();
+            Follow(now); // the PC's offset may have changed (daylight saving)
             foreach (var e in events)
             {
+                if (!Keep(e))
+                {
+                    continue;
+                }
+
+                if (e is ResetLogEvent r && Learn(r) && Follow(now))
+                {
+                    continue; // the kept log, this event included, was counted again with the new shift
+                }
+
                 _tracker.Feed(e);
             }
+
+            Trim(now);
         }
     }
 
@@ -222,6 +295,175 @@ public sealed class DailyService
         return text;
     }
 
+    /// <summary>The PC's UTC offset at <paramref name="t"/>, in whole minutes (the file's own without a source).</summary>
+    private TimeSpan PcOffsetAt(DateTime t) =>
+        _pcUtcOffset is null ? _file.TimesOffset : TimeSpan.FromMinutes(Math.Round(_pcUtcOffset(t).TotalMinutes));
+
+    /// <summary>
+    /// The shift to use at <paramref name="now"/>. With a learned daily update: the PC's local time of it minus the data
+    /// file's daily reset (the server's reset stays put in UTC, so daylight saving and a re-based data file are followed
+    /// at once). A time of day does not tell the date, so of the candidates a whole day apart the one within 12 hours of
+    /// the PC-offset guess is taken, which keeps each game day's weekday name. Without one: the guess itself, the PC's
+    /// offset minus the file's.
+    /// </summary>
+    private TimeSpan ShiftAt(DateTime now)
+    {
+        var pc = PcOffsetAt(now);
+        var guess = pc - _file.TimesOffset;
+        if (_learned is not { } utc)
+        {
+            return guess;
+        }
+
+        var shift = utc + pc - _file.Resets.Daily;
+        while (shift - guess > TimeSpan.FromHours(12))
+        {
+            shift -= TimeSpan.FromDays(1);
+        }
+
+        while (shift - guess <= TimeSpan.FromHours(-12))
+        {
+            shift += TimeSpan.FromDays(1);
+        }
+
+        return shift;
+    }
+
+    /// <summary>
+    /// Learns the server's daily update from one logged at local time <paramref name="r"/>: its time of day, rounded to
+    /// 15 minutes (relative to the file's daily reset), less the PC's offset then, kept as a UTC time of day. One more
+    /// than 2 minutes off a quarter hour is ignored. True when the learned value changed.
+    /// </summary>
+    private bool Learn(ResetLogEvent r)
+    {
+        if (r.Kind != ResetKind.DailyUpdate)
+        {
+            return false;
+        }
+
+        var seen = r.Timestamp.TimeOfDay - _file.Resets.Daily;
+        var shift = TimeSpan.FromMinutes(Math.Round(seen.TotalMinutes / 15, MidpointRounding.AwayFromZero) * 15);
+        if ((seen - shift).Duration() > TimeSpan.FromMinutes(2))
+        {
+            return false; // the server pushes it seconds after a quarter hour; anything else is not a reset moment
+        }
+
+        var ticks = (_file.Resets.Daily + shift - PcOffsetAt(r.Timestamp)).Ticks % TimeSpan.TicksPerDay;
+        var utc = TimeSpan.FromTicks(ticks < 0 ? ticks + TimeSpan.TicksPerDay : ticks);
+        if (_learned == utc)
+        {
+            return false; // the same server time, seen under the same or another PC offset
+        }
+
+        _learned = utc;
+        _learnedDirty = true;
+        return true;
+    }
+
+    /// <summary>
+    /// A tracker for <paramref name="shift"/> loaded with <paramref name="state"/>. A state counted with another data file
+    /// or another shift (the fingerprint names both) is recounted: keep the history before today's replay and the user's
+    /// ticks, and let the replay count today again with the new rules. Stored counts stay: each knows when it was last
+    /// right, and the replay only applies what came after (2026-11-05: dropping them restarted the special train at 0 and
+    /// showed 3/6 for the game's 0/6). Cards rebuild from the replay. Counts are forgotten in <see cref="Recount"/>, and
+    /// only from where the replayed log begins: older log files are gone (Honor War's 12 rounds of Tuesday 01:20-01:50
+    /// lived only in log.bak2 by Thursday).
+    /// </summary>
+    private DailyTracker Build(TimeSpan shift, DailyState? state, DateTime now)
+    {
+        var tracker = new DailyTracker(_file.Shifted(shift));
+        if (_tracker is not null)
+        {
+            tracker.Version = _tracker.Version + 1;
+        }
+
+        tracker.SetCustomItems(_prefs.Custom);
+        _shift = shift;
+        _recountFrom = null;
+        if (state is not null)
+        {
+            if (state.Catalog != tracker.Catalog.Fingerprint)
+            {
+                _recountFrom = tracker.ReplayFrom(now);
+                state = state with { Watermark = DateTime.MinValue, Producers = null };
+                Recounts++;
+            }
+
+            tracker.Import(state);
+        }
+
+        return tracker;
+    }
+
+    /// <summary>
+    /// After <see cref="Build"/> asked for a recount: forgets the counts from where <paramref name="log"/> begins (or the
+    /// earliest current period, if later); events before that only rebuild the context. No log keeps every saved count.
+    /// </summary>
+    private void Recount(IReadOnlyList<LogEvent> log)
+    {
+        if (_recountFrom is not { } recount)
+        {
+            return;
+        }
+
+        _recountFrom = null;
+        var logBegins = log.Count > 0 ? log.Min(e => e.Timestamp) : DateTime.MaxValue;
+        var from = logBegins > recount ? logBegins : recount;
+        _tracker.ForgetCountsFrom(from);
+        if (from != DateTime.MaxValue)
+        {
+            _tracker.CountFrom = from.AddTicks(-1);
+        }
+    }
+
+    /// <summary>
+    /// Re-derives the catalog when the shift for <paramref name="now"/> is not the one in use, and counts the kept log
+    /// again with it. True when it did.
+    /// </summary>
+    private bool Follow(DateTime now)
+    {
+        var shift = ShiftAt(now);
+        if (shift == _shift)
+        {
+            return false;
+        }
+
+        _tracker = Build(shift, _tracker.Export(), now);
+        Recount(_kept);
+        foreach (var e in _kept)
+        {
+            _tracker.Feed(e);
+        }
+
+        return true;
+    }
+
+    /// <summary>Keeps <paramref name="e"/> for a later recount; false for a duplicate (the tracker's own rule).</summary>
+    private bool Keep(LogEvent e)
+    {
+        if (e.Timestamp < _keptLast.At || (e.Timestamp == _keptLast.At && e.StartOffset <= _keptLast.Offset))
+        {
+            return false;
+        }
+
+        _keptLast = (e.Timestamp, e.StartOffset);
+        _kept.Add(e);
+        return true;
+    }
+
+    /// <summary>Drops kept events older than a day before the earliest current period (no new shift reaches further back).</summary>
+    private void Trim(DateTime now)
+    {
+        var keepFrom = _tracker.ReplayFrom(now).AddDays(-1);
+        if (_kept.Count == 0 || _kept[0].Timestamp >= keepFrom)
+        {
+            return;
+        }
+
+        var first = _kept.FindIndex(e => e.Timestamp >= keepFrom);
+        _kept.RemoveRange(0, first < 0 ? _kept.Count : first);
+    }
+
     /// <summary>The list now.</summary>
     public DailySnapshot Snapshot()
     {
@@ -287,16 +529,20 @@ public sealed class DailyService
 
     /// <summary>
     /// A small readable copy of the list now (RuntimeDir\dailies\today.json, for "Companion.Cli dailies"): the game day,
-    /// the next reset and every shown item with its name, count and state. Names and counts only.
+    /// the next reset, the time shift in use and every shown item with its name, count and state. Names and counts only.
     /// </summary>
     public byte[] TodayFile()
     {
         DailySnapshot s;
         DailyPrefs p;
+        TimeSpan shift;
+        bool learned;
         lock (_gate)
         {
             s = _tracker.Snapshot(_nowLocal());
             p = _prefs;
+            shift = _shift;
+            learned = _learned is not null;
         }
 
         var items = s.Items.Where(i => p.IsShown(i) && i.Today && i.Kind != DailyKind.Producer).Select(i => new
@@ -326,6 +572,8 @@ public sealed class DailyService
             asOf = s.AsOf.ToString("yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture),
             gameDay = s.GameDay.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
             nextReset = s.NextDailyReset.ToString("yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+            shiftMinutes = (int)shift.TotalMinutes,
+            shiftLearned = learned,
             replaying = _buffer is not null,
             items,
             cards,
@@ -337,13 +585,20 @@ public sealed class DailyService
     {
         lock (_gate)
         {
-            if (_tracker.Version == _savedVersion || _buffer is not null)
+            if ((_tracker.Version == _savedVersion && !_learnedDirty) || _buffer is not null)
             {
                 return null;
             }
 
             _savedVersion = _tracker.Version;
-            return JsonSerializer.SerializeToUtf8Bytes(_tracker.Export(), Json);
+            _learnedDirty = false;
+            var state = _tracker.Export();
+            if (_learned is { } utc)
+            {
+                state = state with { LearnedResetUtcMinutes = (int)utc.TotalMinutes };
+            }
+
+            return JsonSerializer.SerializeToUtf8Bytes(state, Json);
         }
     }
 

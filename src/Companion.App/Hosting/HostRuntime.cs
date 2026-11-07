@@ -538,7 +538,7 @@ internal sealed class HostRuntime : IDisposable
                 return;
             }
 
-            var svc = new DailyService(catalog, ReadIfExists("state.json"), () => _clock.UtcNow.LocalDateTime, ReadIfExists("prefs.json"));
+            var svc = new DailyService(catalog, ReadIfExists("state.json"), () => _clock.UtcNow.LocalDateTime, ReadIfExists("prefs.json"), DailyService.PcUtcOffset);
             Dailies = svc;
             jobs.JobFinished += (name, state) => svc.OnJob(name, state.ToString());
             if (svc.StateProblem is { } problem)
