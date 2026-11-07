@@ -19,8 +19,8 @@ public sealed class TimeZoneTests
 
     private static Func<DateTime, TimeSpan> Pc(double hours) => _ => TimeSpan.FromHours(hours);
 
-    private DailyService Service(Func<DateTime, TimeSpan>? pc, byte[]? state = null) =>
-        new(Data.Catalog(), state, () => _now, null, pc);
+    private DailyService Service(Func<DateTime, TimeSpan>? pc, byte[]? state = null, DailyCatalog? catalog = null) =>
+        new(catalog ?? Data.Catalog(), state, () => _now, null, pc);
 
     private static DailyItemView Item(DailySnapshot s, string id) => s.Items.Single(i => i.Id == id);
 
@@ -102,7 +102,7 @@ public sealed class TimeZoneTests
 
         var saved = svc.TakeStateToSave();
         Assert.IsNotNull(saved);
-        StringAssert.Contains(System.Text.Encoding.UTF8.GetString(saved), "\"learnedShiftMinutes\":-60");
+        StringAssert.Contains(System.Text.Encoding.UTF8.GetString(saved), "\"learnedResetUtcMinutes\":300", "05:00 UTC");
         StringAssert.Contains(System.Text.Encoding.UTF8.GetString(svc.TodayFile()), "\"shiftMinutes\":-60");
 
         _now = Wed.AddHours(12).AddMinutes(5);
@@ -174,12 +174,70 @@ public sealed class TimeZoneTests
 
         var state = DailyService.Deserialize(svc.TakeStateToSave()!)!;
         Assert.AreEqual(2, state.Progress.Single(p => p.Item == "arena").Count, "Wednesday's runs recounted once");
-        Assert.AreEqual(-60, state.LearnedShiftMinutes);
+        Assert.AreEqual(3 * 60, state.LearnedResetUtcMinutes, "06:00 at the file's +03:00 is 03:00 UTC");
 
         svc.Feed([_log.Reset(Wed.AddDays(1).AddHours(6).AddMinutes(1))]);
         Assert.AreEqual(1, svc.Recounts, "the same shift again changes nothing");
         svc.Feed([_log.Reset(Wed.AddDays(1).AddHours(9).AddMinutes(37))]);
         Assert.AreEqual((1, TimeSpan.FromHours(-1)), (svc.Recounts, svc.Shift), "09:37 is no reset moment: ignored");
+    }
+
+    [TestMethod]
+    public void ADaylightSavingChange_AcrossTheWeeklyMidnight_KeepsTheWeeksCounts()
+    {
+        // a US Eastern PC: UTC-4 until Sunday 2026-11-01 02:00, then UTC-5; the shift goes from -7 h to -8 h, and the
+        // weekly reset from Monday 00:00 to Sunday 23:00 (review 2026-11-08: the week's key moved and Honor War read 0)
+        static TimeSpan Eastern(DateTime t) => TimeSpan.FromHours(t < new DateTime(2026, 11, 1, 2, 0, 0) ? -4 : -5);
+        var monday = new DateTime(2026, 10, 26, 18, 20, 0);
+        _now = monday.AddMinutes(25);
+        var first = Service(Eastern);
+        first.CompleteReplay([]);
+        Assert.AreEqual(TimeSpan.FromHours(-7), first.Shift);
+        first.Feed([
+            _log.Push(monday, "honor_war_network", "notify_honor_war_stage", true),
+            _log.Push(monday.AddMinutes(10), "honor_war_network", "notify_honor_war_stage", false),
+            _log.Push(monday.AddMinutes(20), "honor_war_network", "notify_honor_war_stage", true)]);
+        Assert.AreEqual(3, Item(first.Snapshot(), "honor").Count);
+        var state = first.TakeStateToSave()!;
+
+        // Sunday morning, after the change; the replayed log only begins on Thursday
+        _now = new DateTime(2026, 11, 1, 10, 0, 0);
+        var svc = Service(Eastern, state);
+        svc.CompleteReplay([_log.Show(new DateTime(2026, 10, 29, 12, 0, 0), "UI_ARENA_VIEW")]);
+        Assert.AreEqual(TimeSpan.FromHours(-8), svc.Shift);
+        Assert.AreEqual(1, svc.Recounts, "a new shift is a recount");
+        var s = svc.Snapshot();
+        Assert.AreEqual(3, Item(s, "honor").Count, "the week's rounds keep their week (older than the replayed log)");
+        Assert.AreEqual(new DateTime(2026, 11, 1, 23, 0, 0), s.NextWeeklyReset);
+    }
+
+    [TestMethod]
+    public void ALearnedDailyUpdate_FollowsADataFileReBasedToAnotherOffset()
+    {
+        // a UTC+3 PC on a server whose daily update comes at 06:00 local (03:00 UTC)
+        _now = Wed.AddHours(12);
+        var svc = Service(Pc(3));
+        svc.CompleteReplay([_log.Reset(Wed.AddHours(6).AddSeconds(4))]);
+        Assert.AreEqual(TimeSpan.FromHours(-1), svc.Shift);
+        var saved = svc.TakeStateToSave()!;
+
+        // the data file now says its times are UTC: daily and weekly 04:00, the same server moment as 07:00 at +03:00
+        var c = Data.Catalog();
+        var utcFile = c with
+        {
+            TimesUtcOffset = "+00:00",
+            Resets = c.Resets with { Daily = TimeSpan.FromHours(4), Weekly = TimeSpan.FromHours(4), Calendar = TimeSpan.FromHours(-1) },
+        };
+        _now = Wed.AddHours(12).AddMinutes(5);
+        var again = Service(Pc(3), saved, utcFile);
+        Assert.AreEqual(TimeSpan.FromHours(2), again.Shift, "03:00 UTC is 06:00 here, 04:00 + 2 h");
+        again.CompleteReplay([]);
+        Assert.AreEqual(Wed.AddDays(1).AddHours(6), again.Snapshot().NextDailyReset, "still the learned 06:00, not 07:00 or 03:00");
+
+        // and a PC moved to UTC+1 sees the same server moment at 04:00 without a new update
+        var moved = Service(Pc(1), saved, utcFile);
+        moved.CompleteReplay([]);
+        Assert.AreEqual(Wed.AddDays(1).AddHours(4), moved.Snapshot().NextDailyReset);
     }
 
     [TestMethod]
@@ -192,7 +250,7 @@ public sealed class TimeZoneTests
             """u8.ToArray();
         var state = DailyService.Deserialize(old);
         Assert.IsNotNull(state);
-        Assert.IsNull(state.LearnedShiftMinutes);
+        Assert.IsNull(state.LearnedResetUtcMinutes);
         var svc = Service(null, old);
         Assert.IsNull(svc.StateProblem);
         Assert.IsNull(svc.LearnedShift);
@@ -211,7 +269,7 @@ public sealed class TimeZoneTests
         var minus8 = c.Shifted(TimeSpan.FromHours(-8));
         Assert.AreEqual(TimeSpan.FromHours(-1), minus8.Resets.Daily, "kept before midnight so Monday's game day stays Monday");
         Assert.AreEqual(TimeSpan.FromHours(-6), minus8.Resets.Calendar);
-        Assert.AreEqual((DayOfWeek.Sunday, TimeSpan.FromHours(23)), (minus8.Resets.WeeklyDay, minus8.Resets.Weekly));
+        Assert.AreEqual((DayOfWeek.Monday, TimeSpan.FromHours(-1)), (minus8.Resets.WeeklyDay, minus8.Resets.Weekly), "Monday -01:00, Sunday 23:00; the week keeps its Monday");
         Assert.AreEqual("13:44", minus8.Items.Single(i => i.Id == "bear").Windows.Single().At);
         Assert.AreEqual(c.Fingerprint + "@-480", minus8.Fingerprint);
         Assert.AreEqual(c.Fingerprint, minus8.Shifted(TimeSpan.FromHours(8)).Fingerprint, "shifting back gives the file's own");

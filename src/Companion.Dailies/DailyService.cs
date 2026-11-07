@@ -49,8 +49,11 @@ public sealed class DailyService
     /// <summary>The shift the tracker's catalog was made with.</summary>
     private TimeSpan _shift;
 
-    /// <summary>The shift learned from the log, and the PC's UTC offset at that moment.</summary>
-    private (TimeSpan Shift, TimeSpan PcOffset)? _learned;
+    /// <summary>
+    /// The server's daily update as a UTC time of day, learned from the log. It depends on neither the data file nor the
+    /// PC's offset, so a re-based data file or a daylight-saving change is followed without waiting for the next update.
+    /// </summary>
+    private TimeSpan? _learned;
 
     /// <summary>A new learned shift waits to be saved.</summary>
     private bool _learnedDirty;
@@ -74,9 +77,9 @@ public sealed class DailyService
 
         var state = saved is null ? null : Deserialize(saved);
         StateProblem = saved is not null && state is null ? "dailies.stateUnreadable" : null;
-        if (state is { LearnedShiftMinutes: { } shift, LearnedPcOffsetMinutes: { } pc })
+        if (state is { LearnedResetUtcMinutes: { } utc and >= 0 and < 24 * 60 })
         {
-            _learned = (TimeSpan.FromMinutes(shift), TimeSpan.FromMinutes(pc));
+            _learned = TimeSpan.FromMinutes(utc);
         }
 
         var now = nowLocal();
@@ -114,14 +117,14 @@ public sealed class DailyService
         }
     }
 
-    /// <summary>The shift learned from the game log's daily update (null until one was seen).</summary>
+    /// <summary>The shift the game log's daily update gives now (null until one was seen).</summary>
     public TimeSpan? LearnedShift
     {
         get
         {
             lock (_gate)
             {
-                return _learned?.Shift;
+                return _learned is null ? null : ShiftAt(_nowLocal());
             }
         }
     }
@@ -297,38 +300,22 @@ public sealed class DailyService
         _pcUtcOffset is null ? _file.TimesOffset : TimeSpan.FromMinutes(Math.Round(_pcUtcOffset(t).TotalMinutes));
 
     /// <summary>
-    /// The shift to use at <paramref name="now"/>: the learned one, moved along when the PC's offset changed since
-    /// (daylight saving; the server's reset stays put in UTC, and the next daily update corrects it if not), else the
-    /// PC's offset minus the file's.
+    /// The shift to use at <paramref name="now"/>. With a learned daily update: the PC's local time of it minus the data
+    /// file's daily reset (the server's reset stays put in UTC, so daylight saving and a re-based data file are followed
+    /// at once). A time of day does not tell the date, so of the candidates a whole day apart the one within 12 hours of
+    /// the PC-offset guess is taken, which keeps each game day's weekday name. Without one: the guess itself, the PC's
+    /// offset minus the file's.
     /// </summary>
     private TimeSpan ShiftAt(DateTime now)
     {
         var pc = PcOffsetAt(now);
-        return _learned is { } l ? l.Shift + (pc - l.PcOffset) : pc - _file.TimesOffset;
-    }
-
-    /// <summary>
-    /// Learns the shift from a daily update logged at local time <paramref name="r"/>: its time of day minus the file's
-    /// daily reset, rounded to 15 minutes. A time of day does not tell the date, so of the candidates a whole day apart
-    /// the one within 12 hours of the PC-offset guess is taken, which keeps each game day's weekday name. One more than
-    /// 2 minutes off a quarter hour is ignored. True when the learned value changed.
-    /// </summary>
-    private bool Learn(ResetLogEvent r)
-    {
-        if (r.Kind != ResetKind.DailyUpdate)
-        {
-            return false;
-        }
-
-        var pc = PcOffsetAt(r.Timestamp);
         var guess = pc - _file.TimesOffset;
-        var seen = r.Timestamp.TimeOfDay - _file.Resets.Daily;
-        var shift = TimeSpan.FromMinutes(Math.Round(seen.TotalMinutes / 15, MidpointRounding.AwayFromZero) * 15);
-        if ((seen - shift).Duration() > TimeSpan.FromMinutes(2))
+        if (_learned is not { } utc)
         {
-            return false; // the server pushes it seconds after a quarter hour; anything else is not a reset moment
+            return guess;
         }
 
+        var shift = utc + pc - _file.Resets.Daily;
         while (shift - guess > TimeSpan.FromHours(12))
         {
             shift -= TimeSpan.FromDays(1);
@@ -339,12 +326,36 @@ public sealed class DailyService
             shift += TimeSpan.FromDays(1);
         }
 
-        if (_learned is { } old && old.PcOffset - old.Shift == pc - shift)
+        return shift;
+    }
+
+    /// <summary>
+    /// Learns the server's daily update from one logged at local time <paramref name="r"/>: its time of day, rounded to
+    /// 15 minutes (relative to the file's daily reset), less the PC's offset then, kept as a UTC time of day. One more
+    /// than 2 minutes off a quarter hour is ignored. True when the learned value changed.
+    /// </summary>
+    private bool Learn(ResetLogEvent r)
+    {
+        if (r.Kind != ResetKind.DailyUpdate)
+        {
+            return false;
+        }
+
+        var seen = r.Timestamp.TimeOfDay - _file.Resets.Daily;
+        var shift = TimeSpan.FromMinutes(Math.Round(seen.TotalMinutes / 15, MidpointRounding.AwayFromZero) * 15);
+        if ((seen - shift).Duration() > TimeSpan.FromMinutes(2))
+        {
+            return false; // the server pushes it seconds after a quarter hour; anything else is not a reset moment
+        }
+
+        var ticks = (_file.Resets.Daily + shift - PcOffsetAt(r.Timestamp)).Ticks % TimeSpan.TicksPerDay;
+        var utc = TimeSpan.FromTicks(ticks < 0 ? ticks + TimeSpan.TicksPerDay : ticks);
+        if (_learned == utc)
         {
             return false; // the same server time, seen under the same or another PC offset
         }
 
-        _learned = (shift, pc);
+        _learned = utc;
         _learnedDirty = true;
         return true;
     }
@@ -582,9 +593,9 @@ public sealed class DailyService
             _savedVersion = _tracker.Version;
             _learnedDirty = false;
             var state = _tracker.Export();
-            if (_learned is { } l)
+            if (_learned is { } utc)
             {
-                state = state with { LearnedShiftMinutes = (int)l.Shift.TotalMinutes, LearnedPcOffsetMinutes = (int)l.PcOffset.TotalMinutes };
+                state = state with { LearnedResetUtcMinutes = (int)utc.TotalMinutes };
             }
 
             return JsonSerializer.SerializeToUtf8Bytes(state, Json);

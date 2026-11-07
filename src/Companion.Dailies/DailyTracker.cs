@@ -975,13 +975,11 @@ public sealed record DailyState
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? SeenDays { get; init; }
 
     /// <summary>
-    /// Minutes the data file's times are moved by, learned from the game log's daily update (null until one was seen, and
-    /// in files from before 2026-11-08). See <see cref="DailyService"/>.
+    /// The server's daily update as minutes after 00:00 UTC, learned from the game log (null until one was seen, and in
+    /// files from before 2026-11-08). It names no data file or PC offset, so it stays right when either changes; the
+    /// shift of the data file's times is derived from it (see <see cref="DailyService"/>).
     /// </summary>
-    public int? LearnedShiftMinutes { get; init; }
-
-    /// <summary>The PC's UTC offset in minutes when <see cref="LearnedShiftMinutes"/> was learned.</summary>
-    public int? LearnedPcOffsetMinutes { get; init; }
+    public int? LearnedResetUtcMinutes { get; init; }
 }
 
 /// <summary>What the tray says (entries 3/4/24).</summary>

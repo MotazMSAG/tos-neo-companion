@@ -330,9 +330,10 @@ public sealed record DailyItemDef
 }
 
 /// <summary>
-/// Reset times (local, as the game log writes time). In a shifted catalog (<see cref="DailyCatalog.Shifted"/>) the daily
-/// and calendar times may lie before 00:00 or after 24:00, so a game day keeps its own date and weekday name (a PC at
-/// UTC-5 starts Monday's game day at -01:00, Sunday 23:00); the weekly time is moved to the day it falls on instead.
+/// Reset times (local, as the game log writes time). In a shifted catalog (<see cref="DailyCatalog.Shifted"/>) the times
+/// may lie before 00:00 or after 24:00, so a game day keeps its own date and weekday name (a PC at UTC-5 starts Monday's
+/// game day at -01:00, Sunday 23:00), and a game week keeps its own Monday as its key: the weekly day never changes, so
+/// weekly counts and ticks keep their key when the shift crosses midnight (daylight saving on a UTC-4/-5 PC).
 /// </summary>
 public sealed record DailyResets
 {
@@ -481,8 +482,8 @@ public sealed partial record DailyCatalog
 
     /// <summary>
     /// This catalog with every time moved by <paramref name="shift"/> (rounded to whole minutes): the daily and calendar
-    /// resets (kept outside 00:00-24:00 when they cross midnight, see <see cref="DailyResets"/>), the weekly reset with
-    /// its day, every window's start (each window stays on the game day it belonged to) and the 'usual' hours. The
+    /// and weekly resets (kept outside 00:00-24:00 when they cross midnight, the weekly day unchanged, see
+    /// <see cref="DailyResets"/>), every window's start (each window stays on the game day it belonged to) and the 'usual' hours. The
     /// fingerprint names the shift, so a state counted with another shift is recounted. A zero shift returns this catalog.
     /// </summary>
     public DailyCatalog Shifted(TimeSpan shift)
@@ -491,20 +492,6 @@ public sealed partial record DailyCatalog
         if (shift == TimeSpan.Zero)
         {
             return this;
-        }
-
-        var weekly = Resets.Weekly + shift;
-        var weeklyDay = (int)Resets.WeeklyDay;
-        while (weekly < TimeSpan.Zero)
-        {
-            weekly += TimeSpan.FromDays(1);
-            weeklyDay += 6;
-        }
-
-        while (weekly >= TimeSpan.FromDays(1))
-        {
-            weekly -= TimeSpan.FromDays(1);
-            weeklyDay++;
         }
 
         var total = Shift + shift;
@@ -518,8 +505,7 @@ public sealed partial record DailyCatalog
             {
                 Daily = Resets.Daily + shift,
                 Calendar = Resets.Calendar + shift,
-                Weekly = weekly,
-                WeeklyDay = (DayOfWeek)(weeklyDay % 7),
+                Weekly = Resets.Weekly + shift,
             },
             Items = [.. Items.Select(i => i.Windows.Count == 0 && i.Usual is null ? i : i with
             {
