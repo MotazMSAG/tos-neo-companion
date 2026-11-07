@@ -114,4 +114,10 @@ internal sealed class Log
         var (p, s) = Next();
         return new ItemTipLogEvent(p, s, t, "Loot", item);
     }
+
+    public LogEvent Reset(DateTime t, ResetKind kind = ResetKind.DailyUpdate)
+    {
+        var (p, s) = Next();
+        return new ResetLogEvent(p, s, t, kind);
+    }
 }

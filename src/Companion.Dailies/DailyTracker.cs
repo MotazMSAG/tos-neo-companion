@@ -68,8 +68,11 @@ public sealed class DailyTracker
         _producers = new DailyProducers(catalog.Items.Where(i => i.Kind == DailyKind.Producer));
     }
 
-    /// <summary>Changes with every state change (the UI repaints on a new value).</summary>
-    public long Version { get; private set; }
+    /// <summary>
+    /// Changes with every state change (the UI repaints on a new value). <see cref="DailyService"/> starts a rebuilt
+    /// tracker above the old one's value, so the number only grows.
+    /// </summary>
+    public long Version { get; internal set; }
 
     /// <summary>Newest log event fed (log time).</summary>
     public DateTime? LastEventAt => _lastTs == DateTime.MinValue ? null : _lastTs;
@@ -970,6 +973,15 @@ public sealed record DailyState
 
     /// <summary>Weekdays each event switch was seen opening on (learned schedule).</summary>
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? SeenDays { get; init; }
+
+    /// <summary>
+    /// Minutes the data file's times are moved by, learned from the game log's daily update (null until one was seen, and
+    /// in files from before 2026-11-08). See <see cref="DailyService"/>.
+    /// </summary>
+    public int? LearnedShiftMinutes { get; init; }
+
+    /// <summary>The PC's UTC offset in minutes when <see cref="LearnedShiftMinutes"/> was learned.</summary>
+    public int? LearnedPcOffsetMinutes { get; init; }
 }
 
 /// <summary>What the tray says (entries 3/4/24).</summary>

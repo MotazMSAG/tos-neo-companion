@@ -31,7 +31,8 @@ scenario switch for evening / game closed / new day), Edit my list, Tray and rem
   - Session 1 found that Wednesday's 03:48:45 talk-then-reward was **Worship**, not Kanu: the worship screen had
     reopened at 03:48:39, and the refresh burst included `town.new_worship_get_chest`. So talking alone is not a Kanu
     trace.
-- **Resets (PC local time as the game log writes it; adjust for your server and time zone):**
+- **Resets (clock times at UTC+3, the data file's `timesUtcOffset`; the companion moves every time to the PC's time
+  zone, and to the daily update it sees in the log, by itself):**
   - the daily update at 07:00 (`server_push.daily_update`; the client then refetches activity center, guild forge and
     donate, goddess tower, battle pass, EXP limit and town energy);
   - the calendar day at 02:00 (`notify.on_new_day`; mostly event switches). **Worship follows it:** on 11-03 a bless

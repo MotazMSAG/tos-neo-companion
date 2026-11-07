@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
-  "_comment": "Daily checklist data (DAILIES_MODULE.md). Traces from game-log scans; times are PC local time as the game log writes it (adjust resets and event windows for your server and time zone).",
+  "_comment": "Daily checklist data (DAILIES_MODULE.md). Traces from game-log scans. Every time here (resets, windows, usual hours) is a clock time at the UTC offset 'timesUtcOffset'; the companion moves them to the PC's own time zone by itself and, once the game log shows a daily update, to the reset moment it really saw (other server regions, daylight saving), so nobody needs to edit them.",
+  "timesUtcOffset": "+03:00",
   "resets": { "daily": "07:00:00", "calendar": "02:00:00", "weeklyDay": "monday", "weekly": "07:00:00" },
   "contextSeconds": 180,
   "rewardScreens": [

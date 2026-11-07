@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Companion.Dailies;
 
@@ -327,7 +329,11 @@ public sealed record DailyItemDef
     public DailyProducerDef? Producer { get; init; }
 }
 
-/// <summary>Reset times (local, as the game log writes time).</summary>
+/// <summary>
+/// Reset times (local, as the game log writes time). In a shifted catalog (<see cref="DailyCatalog.Shifted"/>) the daily
+/// and calendar times may lie before 00:00 or after 24:00, so a game day keeps its own date and weekday name (a PC at
+/// UTC-5 starts Monday's game day at -01:00, Sunday 23:00); the weekly time is moved to the day it falls on instead.
+/// </summary>
 public sealed record DailyResets
 {
     /// <summary>Daily update.</summary>
@@ -344,10 +350,24 @@ public sealed record DailyResets
 }
 
 /// <summary>The checklist's data (data/dailies.json): reset times, screen classes, sections and items.</summary>
-public sealed record DailyCatalog
+public sealed partial record DailyCatalog
 {
     /// <summary>Schema version.</summary>
     public int SchemaVersion { get; init; }
+
+    /// <summary>
+    /// The UTC offset the file's times were written in ('+03:00', the default when absent). The service shifts every time
+    /// to the PC's own offset, or by the shift it learned from the game log's daily update (<see cref="Shifted"/>).
+    /// </summary>
+    public string TimesUtcOffset { get; init; } = DefaultTimesUtcOffset;
+
+    /// <summary><see cref="TimesUtcOffset"/> as a time span.</summary>
+    [JsonIgnore]
+    public TimeSpan TimesOffset => TryParseOffset(TimesUtcOffset, out var offset) ? offset : TimeSpan.FromHours(3);
+
+    /// <summary>The shift already applied to this catalog's times (zero for the file as read).</summary>
+    [JsonIgnore]
+    public TimeSpan Shift { get; init; }
 
     /// <summary>Reset times.</summary>
     public DailyResets Resets { get; init; } = new();
@@ -385,6 +405,9 @@ public sealed record DailyCatalog
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
     };
 
+    /// <summary>The offset of a file without 'timesUtcOffset' (the times were first written on a UTC+3 PC).</summary>
+    public const string DefaultTimesUtcOffset = "+03:00";
+
     private static readonly HashSet<string> Kinds = ["reward", "shown", "reply", "push", "map", "job", "handIn", "settle", "guide", "shopRefresh", "presence", "box", "openItem"];
 
     /// <summary>Day names used in 'days' and 'resetDays'.</summary>
@@ -412,6 +435,7 @@ public sealed record DailyCatalog
         }
 
         c = c with { Fingerprint = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(json))[..16] };
+        Check(TryParseOffset(c.TimesUtcOffset, out _), $"timesUtcOffset '{c.TimesUtcOffset}' must look like '+03:00' (from -12:00 to +14:00)");
 
         var sections = c.Sections.Select(s => s.Id).ToHashSet(StringComparer.Ordinal);
         var ids = new HashSet<string>(StringComparer.Ordinal);
@@ -454,6 +478,84 @@ public sealed record DailyCatalog
 
         return c;
     }
+
+    /// <summary>
+    /// This catalog with every time moved by <paramref name="shift"/> (rounded to whole minutes): the daily and calendar
+    /// resets (kept outside 00:00-24:00 when they cross midnight, see <see cref="DailyResets"/>), the weekly reset with
+    /// its day, every window's start (each window stays on the game day it belonged to) and the 'usual' hours. The
+    /// fingerprint names the shift, so a state counted with another shift is recounted. A zero shift returns this catalog.
+    /// </summary>
+    public DailyCatalog Shifted(TimeSpan shift)
+    {
+        shift = TimeSpan.FromMinutes(Math.Round(shift.TotalMinutes));
+        if (shift == TimeSpan.Zero)
+        {
+            return this;
+        }
+
+        var weekly = Resets.Weekly + shift;
+        var weeklyDay = (int)Resets.WeeklyDay;
+        while (weekly < TimeSpan.Zero)
+        {
+            weekly += TimeSpan.FromDays(1);
+            weeklyDay += 6;
+        }
+
+        while (weekly >= TimeSpan.FromDays(1))
+        {
+            weekly -= TimeSpan.FromDays(1);
+            weeklyDay++;
+        }
+
+        var total = Shift + shift;
+        var at = Fingerprint.IndexOf('@', StringComparison.Ordinal);
+        var file = at < 0 ? Fingerprint : Fingerprint[..at];
+        return this with
+        {
+            Shift = total,
+            Fingerprint = total == TimeSpan.Zero ? file : file + "@" + ((int)total.TotalMinutes).ToString(CultureInfo.InvariantCulture),
+            Resets = Resets with
+            {
+                Daily = Resets.Daily + shift,
+                Calendar = Resets.Calendar + shift,
+                Weekly = weekly,
+                WeeklyDay = (DayOfWeek)(weeklyDay % 7),
+            },
+            Items = [.. Items.Select(i => i.Windows.Count == 0 && i.Usual is null ? i : i with
+            {
+                Windows = [.. i.Windows.Select(w => w with { At = ShiftClock(w.At, shift) })],
+                Usual = i.Usual is null ? null : ClockTime().Replace(i.Usual, m => ShiftClock(m.Value, shift)),
+            })],
+        };
+    }
+
+    /// <summary>Reads an offset such as '+03:00' or '-05:00' (from -12:00 to +14:00).</summary>
+    public static bool TryParseOffset(string? text, out TimeSpan offset)
+    {
+        offset = TimeSpan.Zero;
+        if (text is null || OffsetText().Match(text) is not { Success: true } m)
+        {
+            return false;
+        }
+
+        var hours = int.Parse(m.Groups[2].ValueSpan, CultureInfo.InvariantCulture);
+        var minutes = int.Parse(m.Groups[3].ValueSpan, CultureInfo.InvariantCulture);
+        var value = new TimeSpan(hours, minutes, 0);
+        offset = m.Groups[1].ValueSpan[0] == '-' ? -value : value;
+        return minutes < 60 && offset >= TimeSpan.FromHours(-12) && offset <= TimeSpan.FromHours(14);
+    }
+
+    /// <summary>'HH:mm' moved by <paramref name="shift"/> around the clock; text that is not a time stays as it is.</summary>
+    private static string ShiftClock(string hhmm, TimeSpan shift) =>
+        TimeOnly.TryParseExact(hhmm, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var t)
+            ? t.Add(shift).ToString("HH:mm", CultureInfo.InvariantCulture)
+            : hhmm;
+
+    [GeneratedRegex(@"^([+-])(\d{2}):(\d{2})$", RegexOptions.CultureInvariant)]
+    private static partial Regex OffsetText();
+
+    [GeneratedRegex(@"\b(?:[01]\d|2[0-3]):[0-5]\d\b", RegexOptions.CultureInvariant)]
+    private static partial Regex ClockTime();
 
     private static void Check(bool ok, string problem)
     {
