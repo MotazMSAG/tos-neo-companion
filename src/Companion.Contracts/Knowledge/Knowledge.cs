@@ -211,6 +211,13 @@ public sealed record Recipe(
 /// <param name="LearnedUtc">When the tip was logged.</param>
 public sealed record IconItem(string IconKey, long ItemId, string Name, DateTimeOffset LearnedUtc)
 {
+    /// <summary>
+    /// Where this picture was seen, "&lt;sub-tab&gt;@&lt;left&gt;,&lt;listY&gt;" for a Stock tile (2026-10-15), else null. The Stock tab
+    /// lists its items in a fixed order, so a picture that drifted a few bits between runs is still known by its place
+    /// (see the kit's StockIcons.MatchAt).
+    /// </summary>
+    public string? Place { get; init; }
+
     /// <summary>The item key of <see cref="Name"/> (not stored: derived).</summary>
     [System.Text.Json.Serialization.JsonIgnore]
     public ItemKey Item => ItemKey.FromDisplayName(Name);
