@@ -7,28 +7,23 @@ Before the first start
   1. Windows display scaling must be 100%:
      Settings > System > Display > Scale = 100%.
   2. The game: windowed mode, maximized, on a 1920x1080 monitor, English client.
-  3. Game folder: nothing to set up, it is found by itself. At start the companion looks
-     at the running game, then at the usual places (D:\Games\TOS, and on every drive
-     \Games\TOS, \TOS, \Program Files\TOS, \Program Files (x86)\TOS). If it cannot find
-     the game, a small window asks you to start the game and press "Try again", or to
-     "Choose folder..." (the one with TOS.exe). The folder is remembered for the next start.
-     To change it later: tray > Advanced > Game folder..., then restart the companion.
-     (Power users can still set the TOS_GAME_DIR environment variable; it wins over
-     everything else.)
-  4. Daily reset times are set for UTC+3. If your PC is in another time zone,
-     see "Your time zone" in the guide BEFORE step 6.
+  Nothing else to set up: the game folder and your time zone are found by themselves.
 
 First start
-  5. Double-click Companion.App.exe. Windows may say "Windows protected your PC":
-     click "More info", then "Run anyway". Click Yes on the admin prompt.
-  6. A tray icon appears near the clock. Right-click it > Advanced > Trust this build...
+  3. Start the game first (this helps the companion find it), then double-click
+     Companion.App.exe. Windows may say "Windows protected your PC": click "More info",
+     then "Run anyway". Click Yes on the admin prompt.
+     If it cannot find the game, a small window asks you to start the game and press
+     "Try again", or to "Choose folder..." (the folder with TOS.exe). It remembers it.
+  4. A tray icon appears near the clock. Right-click it > Advanced > Trust this build...
      Nothing runs before that.
-  7. Left-click the tray icon: the window opens on the Today checklist. It only reads the
+  5. Left-click the tray icon: the window opens on the Today checklist. It only reads the
      game's log and never clicks: it is ready.
 
 Crafting automation (optional)
-  8. Right-click the tray icon > Advanced > Automation > Crafting (turn it on).
-  9. With the game running, press "Scan all recipes" in the companion's Craft tab (5-20 minutes).
+  6. Right-click the tray icon > Advanced > Automation > Crafting (turn it on).
+  7. With the game running, press "Scan all recipes" in the companion's Craft tab (5-20 minutes).
 
 Stop everything: Ctrl+Alt+Pause, or tray > Stop now.
+Change the game folder later: tray > Advanced > Game folder..., then restart the companion.
 Uninstall: tray > Exit, delete this folder, and delete C:\ProgramData\TOS-companion.

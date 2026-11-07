@@ -62,27 +62,20 @@ No programming tools needed.
 download `TOS-NEO-Companion-…-win-x64.zip` (under "Assets"). Unzip it to a folder of its own, for example
 `C:\TOS-companion`.
 
-**3. The game folder is found by itself.** Nothing to set up. At start the companion looks at the running game,
-then at the usual places (`D:\Games\TOS`, and on every drive `\Games\TOS`, `\TOS`, `\Program Files\TOS`,
-`\Program Files (x86)\TOS`). If it cannot find the game, a small window asks you to start the game and press
-**Try again**, or to **Choose folder...** (the one with `TOS.exe`). The folder is remembered for the next start. To
-change it later: tray > **Advanced** > **Game folder...**, then restart the companion. (Power users can still set the
-`TOS_GAME_DIR` environment variable; it wins over everything else.)
-
-**4. Your time zone** (skip this if your PC is set to UTC+3). See [Your time zone](#your-time-zone) below. Do it
-**before** step 6, because the app checks that its files have not changed since you trusted them.
-
-**5. Start it.** Double-click `Companion.App.exe`.
+**3. Start it.** Double-click `Companion.App.exe`. Starting the game first helps: the companion then finds the
+game folder by itself.
 
 - If Windows says *"Windows protected your PC"*, click **More info**, then **Run anyway**. The app is not
   code-signed.
 - Click **Yes** on the admin prompt. It asks on every start.
+- If it cannot find the game, a small window asks you to start the game and press **Try again**, or to
+  **Choose folder...** (the folder with `TOS.exe`). It remembers the folder for next time.
 - A tray icon appears near the clock (look under the **^** arrow).
 
-**6. Trust the build once.** Right-click the tray icon > **Advanced** > **Trust this build...**. Nothing runs
+**4. Trust the build once.** Right-click the tray icon > **Advanced** > **Trust this build...**. Nothing runs
 before that.
 
-**7. Use it.**
+**5. Use it.**
 
 - **Today (daily checklist):** left-click the tray icon. The window opens on the Today tab. It works right
   away: it only reads the game's log and never clicks. Start the game and play: dailies tick by themselves.
@@ -101,14 +94,23 @@ admin rights.
 
 Everything the app shows and every message is explained in the [user manual](docs/MANUAL.md).
 
-## Your time zone
+## Game folder and time zone: nothing to set up
 
-Nothing to do. The daily checklist's times (daily reset 07:00, calendar day 02:00, weekly reset Monday 07:00 and
-the event times) are written for UTC+3 in `data\dailies.json` (`"timesUtcOffset": "+03:00"`). The app moves them to
-your PC's time zone by itself, so a PC at UTC+1 sees the daily reset at 05:00 and the 21:44 big raccoon at 19:44.
+- **Game folder.** The companion checks these places in order:
+  1. the running game;
+  2. the usual install folders: `D:\Games\TOS`, and on every drive `\Games\TOS`, `\TOS`, `\Program Files\TOS` and
+     `\Program Files (x86)\TOS`;
+  3. otherwise it asks you once.
 
-The first time the game log shows a daily reset while the game runs, the app also learns the real reset time and
-uses it from then on. That covers other server regions and daylight saving. Do not edit the times in the file.
+  To change it later: tray > **Advanced** > **Game folder...**, then restart the companion. Power users can set the
+  `TOS_GAME_DIR` environment variable instead; it wins over everything else.
+- **Time zone.** The daily checklist's times are written for UTC+3 in `data\dailies.json`
+  (`"timesUtcOffset": "+03:00"`): daily reset 07:00, calendar day 02:00, weekly reset Monday 07:00, and the event
+  times. The app moves them to your PC's time zone by itself. For example, a PC at UTC+1 sees the daily reset at
+  05:00 and the 21:44 big raccoon at 19:44.
+
+  The first time the game log shows a daily reset while the game runs, the app also learns the real reset time and
+  uses it from then on. That covers other server regions and daylight saving. Do not edit the times in the file.
 
 ## Build from source (developers)
 
