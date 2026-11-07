@@ -1,0 +1,58 @@
+2026-10-13 23:03:42.314	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_BAG_MAIN
+
+2026-10-13 23:03:42.355	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_BAG_MAIN
+
+2026-10-13 23:03:44.353	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1688    [ui mgr]hide top ui    UI_BAG_MAIN
+
+2026-10-13 22:46:54.717	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1688    [ui mgr]hide top ui    nil
+
+2026-10-13 22:46:52.715	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1688    [ui mgr]hide top ui    GUILD_WAR_GVE_BATTLE_RESULT_SUCC
+
+2026-10-13 22:50:58.885	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_MAIL
+
+2026-10-13 21:36:00.216	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    nil
+
+2026-10-13 21:38:55.589	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    826
+
+2026-10-13 22:50:20.127	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:547    stack over -> remove    UI_GUILD_FORGE
+
+2026-10-13 22:50:20.127	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_GUILD_FORGE
+
+2026-10-13 21:31:04.277	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1777    [ui_mgr] dispose_all_close    UI_ANNOUNCE
+
+2026-10-13 22:50:31.009	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_TEAM_MAIN
+
+2026-10-13 23:13:34.239	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1127    check can open fail2    UI_TIPS2
+
+2026-10-13 22:07:10.298	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:556    【to_hide】 hide_ui    UI_GAMEPLAY_COUNT_DOWN
+
+2026-10-13 21:32:09.390	Log	[LOG] -> module/popup_seq/popup_seq_mgr.lua:191    Cat:popup_seq_mgr.lua[real show ui] tar_data.ui_id    UI_ITEM_REWARD    1
+
+2026-10-13 23:33:20.239	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:547    stack over -> remove    LIFE_CAREER_HELP_CONFIRM
+
+2026-10-13 22:25:07.927	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_CINEMA_BLACK_VIEW
+
+2026-10-13 22:25:13.657	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_CINEMA_BLACK_VIEW
+
+2026-10-13 23:05:54.662	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_SCENARIO_BG
+
+2026-10-13 23:05:54.722	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_SCENARIO_EXIT
+
+2026-10-13 23:05:57.783	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_SCENARIO_EXIT
+
+2026-10-13 23:05:57.783	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_SCENARIO_BG
+
+2026-10-13 21:30:56.262	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:841    load cache ui    GUIDesc/cn/Prefab/Canvas_Chat
+
+2026-10-13 21:31:04.277	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1816    [ui_mgr]clean_unused begin
+
+2026-10-13 23:04:21.713	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:2229    add to delay hide fail, already in list
+
+2026-10-13 21:30:24.907	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:300    [ui_mgr]init close stack max    3
+
+2026-10-13 21:31:05.734	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_MAIN
+
+2026-10-13 21:30:34.142	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_TIPS2
+
+2026-10-13 07:30:12.870	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1104    ui_mgr:true_show_ui ban by guide, ui_id    UI_NEW_ACHV_TIPS_FAKE
+

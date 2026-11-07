@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "app-host" tests (SPEC 13): pipe request validation, queue and rate limits, config defaults and atomic round
+    trip, HALT latch persistence, trust list compare, notifier de-duplication, Cli parsing and exit codes, guardian
+    argument parsing, and a composition smoke test (real constructors, real data loading, no Start).
+    OFFLINE ONLY: no test starts Companion.App, opens the job pipe, touches a window, the registry or the game, or
+    elevates. Temporary files live under this project's output folder (bin\...\tmp).
+  -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA1861</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.App\Companion.App.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Cli\Companion.Cli.csproj" />
+  </ItemGroup>
+</Project>

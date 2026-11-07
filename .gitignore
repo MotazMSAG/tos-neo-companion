@@ -1,0 +1,26 @@
+# build output
+bin/
+obj/
+dist/
+.vs/
+*.user
+*.suo
+TestResults/
+*.binlog
+
+# runtime data (the App keeps its runtime data in %ProgramData%\TOS-companion; these guard local copies)
+run/
+journal/
+diagnostics/
+calibration/
+survey/
+knowledge/
+config.json
+halt.json
+trusted-build.json
+templates/staging/
+dist-prev/
+
+# private captures: full game screenshots are never committed (image tests skip without them)
+tests/TestData/images/*.png
+tests/Companion.TeaHouse.Tests/TestData/*.png

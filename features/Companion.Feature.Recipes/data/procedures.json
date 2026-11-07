@@ -1,0 +1,69 @@
+[
+  {
+    "id": "recipes.scanRecipes",
+    "description": "Reset, open the Ability view, read the shown recipe (craft.pairs), Esc closes it. Stubs until menu.ability is cut (Calibrate) and craft.pairs is surveyed; recipe list scrolling unproven.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "survey.menu.ability",
+        "pre": {},
+        "action": { "type": "needsSurvey", "what": "menu.ability" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "open",
+        "pre": {},
+        "action": { "type": "navigate", "screenId": "ability" },
+        "expect": { "screen": "ability" },
+        "timeoutMs": 6000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "survey.craft.pairs",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "needsSurvey", "what": "craft.pairs" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "read", "readerId": "craft.pairs", "outputKey": "recipe" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_LIFESKILL_MAKE_VIEW" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "vision-ocr" (SPEC 2, 7.1, 13, 14): template catalog, masked NCC search, HUD classifier, frame checks,
+    region change, crops and the only PNG encoder for frames (EncodePng with blackouts).
+    References Companion.Contracts only, plus System.Drawing (PNG codec) through UseWindowsForms.
+    No P/Invoke, no window access, no file access: template images arrive as bytes from the host loader.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Vision</RootNamespace>
+    <AssemblyName>Companion.Vision</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Only System.Drawing is needed; keep WinForms types out of scope. -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Vision.Tests" />
+    <InternalsVisibleTo Include="Companion.Perception.Tests" />
+    <InternalsVisibleTo Include="Companion.Features.Tests" />
+    <InternalsVisibleTo Include="Companion.TeaHouse.Tests" />
+    <InternalsVisibleTo Include="Companion.TemplateCutter" />
+  </ItemGroup>
+</Project>

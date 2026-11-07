@@ -1,0 +1,47 @@
+[
+  {
+    "id": "inventory.stock.grid",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "stock.anchor" ] },
+    "regions": [
+      { "id": "grid", "clientRect": { "left": 300, "top": 270, "right": 1540, "bottom": 812 }, "rule": "iconGrid", "pair": "none", "fontStyle": "stock-count-dark", "min": 0, "max": 9999999 }
+    ],
+    "status": "ready",
+    "notes": "Any sub-tab: identity = the selected 'Stock' tab (the probe of whether the Stock tab is open). Ability view, Stock tab (live 2026-10-15; full-scale captures tests/TestData/images/stock_*_full.png, copies of proofs/out): the item grid's visible area, client (300..1540, 270..812) (the list is clipped at about y 280 and 815; the Homestead sub-tab's footer with storage, building materials, 'Expand Inventory' and 'Treebond Warehouse' lies below it and is never read or pressed). Tiles 115x120 in 6 columns 211 px apart (left outlines at x 356, 568, 779, 989, 1200, 1411), rows 169 px apart inside a section, section headers between rows; only whole tiles are read: icon.k (fingerprint above the count line, rect = the tile), count.k (dark brown digits with a white halo at the tile's bottom right, font 'stock-count-dark'; a faded tile without a count reads 0, detail 'faded'; a tile in colour without a count, e.g. a favourite jar, is Unknown)."
+  },
+  {
+    "id": "inventory.stock.ability",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "stock.anchor", "stock.sub.ability.on" ] },
+    "regions": [
+      { "id": "grid", "clientRect": { "left": 300, "top": 270, "right": 1540, "bottom": 812 }, "rule": "iconGrid", "pair": "none", "fontStyle": "stock-count-dark", "min": 0, "max": 9999999 }
+    ],
+    "status": "ready",
+    "notes": "The Ability sub-tab (materials by section: Crystal, Essence, Mineral, Wood, ...); identity also needs the Ability sub-tab selected. Ability view, Stock tab (live 2026-10-15; full-scale captures tests/TestData/images/stock_*_full.png, copies of proofs/out): the item grid's visible area, client (300..1540, 270..812) (the list is clipped at about y 280 and 815; the Homestead sub-tab's footer with storage, building materials, 'Expand Inventory' and 'Treebond Warehouse' lies below it and is never read or pressed). Tiles 115x120 in 6 columns 211 px apart (left outlines at x 356, 568, 779, 989, 1200, 1411), rows 169 px apart inside a section, section headers between rows; only whole tiles are read: icon.k (fingerprint above the count line, rect = the tile), count.k (dark brown digits with a white halo at the tile's bottom right, font 'stock-count-dark'; a faded tile without a count reads 0, detail 'faded'; a tile in colour without a count, e.g. a favourite jar, is Unknown)."
+  },
+  {
+    "id": "inventory.stock.homestead",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "stock.anchor", "stock.sub.homestead.on" ] },
+    "regions": [
+      { "id": "grid", "clientRect": { "left": 300, "top": 270, "right": 1540, "bottom": 812 }, "rule": "iconGrid", "pair": "none", "fontStyle": "stock-count-dark", "min": 0, "max": 9999999 }
+    ],
+    "status": "ready",
+    "notes": "The Homestead sub-tab (processed goods, no sections; shared homestead, counts are volatile); identity also needs the Homestead sub-tab selected. Ability view, Stock tab (live 2026-10-15; full-scale captures tests/TestData/images/stock_*_full.png, copies of proofs/out): the item grid's visible area, client (300..1540, 270..812) (the list is clipped at about y 280 and 815; the Homestead sub-tab's footer with storage, building materials, 'Expand Inventory' and 'Treebond Warehouse' lies below it and is never read or pressed). Tiles 115x120 in 6 columns 211 px apart (left outlines at x 356, 568, 779, 989, 1200, 1411), rows 169 px apart inside a section, section headers between rows; only whole tiles are read: icon.k (fingerprint above the count line, rect = the tile), count.k (dark brown digits with a white halo at the tile's bottom right, font 'stock-count-dark'; a faded tile without a count reads 0, detail 'faded'; a tile in colour without a count, e.g. a favourite jar, is Unknown)."
+  },
+  {
+    "id": "inventory.stock.tailor",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "stock.anchor", "stock.sub.tailor.on" ] },
+    "regions": [
+      { "id": "grid", "clientRect": { "left": 300, "top": 270, "right": 1540, "bottom": 812 }, "rule": "iconGrid", "pair": "none", "fontStyle": "stock-count-dark", "min": 0, "max": 9999999 }
+    ],
+    "status": "ready",
+    "notes": "The Tailor sub-tab (5 items on 2026-10-15; 4-5 digit counts are drawn smaller, e.g. 23550); identity also needs the Tailor sub-tab selected. Ability view, Stock tab (live 2026-10-15; full-scale captures tests/TestData/images/stock_*_full.png, copies of proofs/out): the item grid's visible area, client (300..1540, 270..812) (the list is clipped at about y 280 and 815; the Homestead sub-tab's footer with storage, building materials, 'Expand Inventory' and 'Treebond Warehouse' lies below it and is never read or pressed). Tiles 115x120 in 6 columns 211 px apart (left outlines at x 356, 568, 779, 989, 1200, 1411), rows 169 px apart inside a section, section headers between rows; only whole tiles are read: icon.k (fingerprint above the count line, rect = the tile), count.k (dark brown digits with a white halo at the tile's bottom right, font 'stock-count-dark'; a faded tile without a count reads 0, detail 'faded'; a tile in colour without a count, e.g. a favourite jar, is Unknown)."
+  },
+  {
+    "id": "inventory.stock.hyperweather",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "stock.anchor", "stock.sub.hyperweather.on" ] },
+    "regions": [
+      { "id": "grid", "clientRect": { "left": 300, "top": 270, "right": 1540, "bottom": 812 }, "rule": "iconGrid", "pair": "none", "fontStyle": "stock-count-dark", "min": 0, "max": 9999999 }
+    ],
+    "status": "ready",
+    "notes": "The Hyperweather sub-tab (3 items on 2026-10-15); identity also needs the Hyperweather sub-tab selected. Ability view, Stock tab (live 2026-10-15; full-scale captures tests/TestData/images/stock_*_full.png, copies of proofs/out): the item grid's visible area, client (300..1540, 270..812) (the list is clipped at about y 280 and 815; the Homestead sub-tab's footer with storage, building materials, 'Expand Inventory' and 'Treebond Warehouse' lies below it and is never read or pressed). Tiles 115x120 in 6 columns 211 px apart (left outlines at x 356, 568, 779, 989, 1200, 1411), rows 169 px apart inside a section, section headers between rows; only whole tiles are read: icon.k (fingerprint above the count line, rect = the tile), count.k (dark brown digits with a white halo at the tile's bottom right, font 'stock-count-dark'; a faded tile without a count reads 0, detail 'faded'; a tile in colour without a count, e.g. a favourite jar, is Unknown)."
+  }
+]

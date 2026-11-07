@@ -1,0 +1,56 @@
+[
+  {
+    "id": "survey.captureCrops",
+    "description": "Passive: capture the current screen and save template-sized crops (no input).",
+    "kind": "maintenance",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 0,
+      "maxClicks": 0,
+      "maxEsc": 0,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "capture",
+        "pre": {},
+        "action": { "type": "capture", "label": "survey-crops", "scope": "templateCrops" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "survey.captureFull",
+    "description": "Passive: capture the full client frame with the chat panel blacked out (explicit fullFrame=true only; no input).",
+    "kind": "maintenance",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 0,
+      "maxClicks": 0,
+      "maxEsc": 0,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "capture",
+        "pre": {},
+        "action": { "type": "capture", "label": "survey-full", "scope": "fullFrameMasked" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

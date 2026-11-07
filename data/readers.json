@@ -1,0 +1,58 @@
+[
+  {
+    "id": "bag.grid",
+    "screen": { "logUiName": "UI_BAG_MAIN", "anchorTemplateIds": [] },
+    "regions": [],
+    "status": "needsSurvey",
+    "notes": "Bag cells and their counts (ItemCellCount: empty = 1 only for a known stackable, 'Lv\\d+' = equipment, not stock), 3 tabs (Bag, Product Bag, Inventory); scrolling unproven. Needs a full-scale capture of the open bag, an anchor template and the 'bag-count-outlined' digit font (white digits with a dark outline). Only a half-scale capture exists (proofs/out/b_after_B.png)."
+  },
+  {
+    "id": "craft.pairs",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "craft.materials.header" ] },
+    "regions": [
+      { "id": "materials", "clientRect": { "left": -330, "top": 33, "right": 317, "bottom": 122 }, "anchorId": "craft.materials.header", "rule": "tileRow", "pair": "ownedRequired", "fontStyle": "parchment-pair", "min": 0, "max": 9999999 },
+      { "id": "requires", "clientRect": { "left": -234, "top": 159, "right": 70, "bottom": 197 }, "anchorId": "craft.materials.header", "rule": "labeledPair", "pair": "ownedRequired", "fontStyle": "parchment-pair", "min": 0, "max": 9999999, "optional": true }
+    ],
+    "status": "ready",
+    "notes": "Make tab, Materials Required row of the selected recipe, relative to the 'Materials Required' header (found centre (1270,641) on proofs/out/live_ability_make_full.png, full scale, live run 2026-10-14). materials (tileRow, 2026-10-14): the tiles are DETECTED along the band client (940..1587, 674..763), centred like the row (centre x 1263.5), because the row shifts with the count (3 materials: tiles at x 1088|1220|1352, White Toast 40/1, 45/3, 340/3, full scale; 4 materials: x 1022|1154|1286|1418, full scale in tests/TestData/images/make_fav3..5_full.png). It gives materials = the tile count, then icon.k (fingerprint; the value's rect is the tile) and pair.k ('owned/required' in the 120x24 box under tile k, font 'parchment-pair') from the left. requires (labeledPair, optional): the extra line 'Requires: 86/5' some recipes show under the pairs (seen only at half scale on 2026-10-14, client about (1038..1233, 806..834); no full-scale capture shows it, so it is read with the pair font); the value is the last word of the line; a plain line (every full-scale capture) reads Ok with no value. The 'insufficient' colour (owned < required) is red (make_fav1_whitetoast_full.png '1/3'); it binarises like the green."
+  },
+  {
+    "id": "craft.list",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "craft.list.anchor" ] },
+    "regions": [],
+    "status": "ready",
+    "notes": "Identity probe (2026-10-15, no regions): the Ability view shows the Make tab's recipe list page, i.e. its 'Make' title (craft.list.anchor, cut from live_ability_make_full.png) is found. The right-hand tab column (Make (1757,300), Learn (1738,440), Stock (1738,578), Gather (1736,716), Recipe Manual (1738,857)) switches tabs without any UI event, so UI_LIFESKILL_MAKE_VIEW stays on top on every tab: a stray press on that column (live 2026-10-15: the Learn tab) is only seen here. ScanRecipeList reads it before every list input and goes back to the Make tab (craft.make.tab) when it reads ScreenMismatch with the view on top."
+  },
+  {
+    "id": "craft.other.tab",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "craft.make.tab" ] },
+    "regions": [],
+    "status": "ready",
+    "notes": "Identity probe (2026-10-15, no regions): the Ability view shows another tab than Make (Stock, Learn, Gather, Recipe Manual), i.e. the UNSELECTED 'Make' tab of the right-hand column (craft.make.tab, cut from tests/TestData/images/stock_ability_top_full.png) is found. ScanRecipeList presses that tab only when this probe confirms it (never blind) and the list probe craft.list mismatches."
+  },
+  {
+    "id": "craft.product",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [ "craft.materials.header" ] },
+    "regions": [
+      { "id": "product.name", "clientRect": { "left": 55, "top": -421, "right": 310, "bottom": -385 }, "anchorId": "craft.materials.header", "rule": "text", "pair": "none" },
+      { "id": "product.owned", "clientRect": { "left": -72, "top": -225, "right": -8, "bottom": -197 }, "anchorId": "craft.materials.header", "rule": "int", "pair": "none", "fontStyle": "badge-dark", "min": 0, "max": 9999999 },
+      { "id": "product.counter", "clientRect": { "left": -184, "top": -135, "right": -64, "bottom": -109 }, "anchorId": "craft.materials.header", "rule": "pair", "pair": "progress", "fontStyle": "counter-dark", "min": 0, "max": 9999999, "optional": true }
+    ],
+    "status": "ready",
+    "notes": "Make tab, selected recipe (full-scale captures tests/TestData/images/live_ability_make_full.png and make_fav1..5_full.png, 2026-10-14/15), relative to the 'Materials Required' header: product.name = the recipe title, left-aligned from client x 1326 in a box that clips it at x 1325 (e.g. 'White Toast', 'Vanilla Cream'); a title longer than the box scrolls and is cut on the box's first column (make_fav3/4_full.png: '...erry Yogurt', '...ied Snapper'), so the region starts exactly there (client (1325,220)-(1580,256)) and cut or edge-near text reads Unknown (the item tip's logged name is the real source of the name). product.owned = the owned count in the white badge under the product picture (e.g. 25, client (1198,416)-(1262,444)). product.counter (optional): the 'a/b' in the bar under the stars that some products show ('5/300', '0/300', '6/300'; dark brown, about 19 px tall, overlapping the bar's lighter outline at y 511-512 and 528), client (1086,506)-(1206,532), font 'counter-dark'; White Toast and Lime Water show none (plain parchment there, reads Ok with no value). Text running into a region edge (a longer name, a wider badge) reads Unknown."
+  },
+  {
+    "id": "craft.quantity",
+    "screen": { "logUiName": "UI_LIFESKILL_MAKE_VIEW", "anchorTemplateIds": [] },
+    "regions": [],
+    "status": "needsSurvey",
+    "notes": "Requested quantity before commit (Int). Needs a full-scale capture of the quantity selector and its digit font."
+  },
+  {
+    "id": "lumi.products",
+    "screen": { "logUiName": "UI_HOME_PET_VIEW", "anchorTemplateIds": [] },
+    "regions": [],
+    "status": "needsSurvey",
+    "notes": "Lumi's Hut product stored/capacity pairs such as 18/18 (Pair, StoredCapacity) and 'Managing: 5/60' (Pair, AssignedSlots). Seen only in the half-scale proofs/out/c3_Ability.png (pairs around client y 934-968, x 400-1260; dark brown text on parchment); positions must be re-measured at full scale, with an anchor template and the 'parchment-dark' digit font."
+  }
+]

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "inventory" (SPEC 11.4): ScanBag, read-only and key-only (B, read, Esc). NeedsSurvey until the bag.grid
+    reader is surveyed. ScanStock (2026-10-15): the Ability view's Stock tab, read-only (its procedures, readers and
+    templates with their PNGs are in data\). References Companion.Contracts ONLY (static rule 4); the shared Kit sources
+    are compiled in. data\** is copied to <out>\features\inventory\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.Inventory</RootNamespace>
+    <AssemblyName>Companion.Feature.Inventory</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\inventory\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

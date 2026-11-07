@@ -1,0 +1,155 @@
+[
+  {
+    "id": "gather.view.anchor",
+    "imageFile": "gather.view.anchor.png",
+    "expectedCenter": {
+      "x": 1755,
+      "y": 716
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_tab_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1700,694)-(1810,739); the SELECTED right-hand 'Gather' tab (fixed): identity of the Gather tab and anchor of the Gathering Helper button press (anchor + offset); never clicked itself"
+  },
+  {
+    "id": "gather.anchor",
+    "imageFile": "gather.anchor.png",
+    "expectedCenter": {
+      "x": 640,
+      "y": 476
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_helper_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (430,458)-(850,494); 'What would you like to gather?' of the Gathering Helper (UI_LIFESKILL_AUTO_COLLECT; static text, NCC 1.000 on every helper capture, 0.185 while the target picker covers it): identity of the helper with no picker open and anchor of the list's tile presses and drags; never clicked itself"
+  },
+  {
+    "id": "gather.begin",
+    "imageFile": "gather.begin.png",
+    "expectedCenter": {
+      "x": 1490,
+      "y": 311
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_queued.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1445,268)-(1535,355); the ACTIVE Begin button of the Gathering Helper (a target is queued; grey and not matched while the queue is empty): starts gathering, which teleports the character to a gathering site (log: set_auto_collect_status 1, collect_mgr goto_collection begin <item id>)"
+  },
+  {
+    "id": "gather.finish",
+    "imageFile": "gather.finish.png",
+    "expectedCenter": {
+      "x": 1490,
+      "y": 311
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_field.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1445,268)-(1535,355); the Finish button of the Gathering Helper (the queue is complete; the game reopens the helper itself): claims the queue (log: set_auto_collect_status 0)"
+  },
+  {
+    "id": "gather.set.anchor",
+    "imageFile": "gather.set.anchor.png",
+    "expectedCenter": {
+      "x": 810,
+      "y": 623
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_set_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (695,605)-(925,642); 'Target Quantity' of the gathering target picker (UI_LIFESKILL_AUTO_COLLECT_SET): identity of the picker and anchor of its picture, quantity and Confirm presses; never clicked itself"
+  },
+  {
+    "id": "keypad.anchor",
+    "imageFile": "keypad.anchor.png",
+    "expectedCenter": {
+      "x": 1145,
+      "y": 330
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gather_qty_tap.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1108,295)-(1182,365); the clear button of the game's number keypad UI_CALCULATOR (the SAME keypad at the same place for the gathering picker's quantity and the Make view's quantity, live 2026-10-15; a typed number is clamped by the game to the most possible): identity of the keypad and anchor of its key presses (anchor + offset); pressed itself as 'clear'"
+  },
+  {
+    "id": "gear.notice.box",
+    "imageFile": "gear.notice.box.png",
+    "expectedCenter": {
+      "x": 858,
+      "y": 610
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gear_notice_full.png (copy of proofs/out/glove_now.png, live 2026-10-18) ClientFull offset (0,0) scale 1; client rect (687,590)-(1030,630): the label 'Don't show again today' of the gear durability Notice ('<gear> Durability is insufficient, and stats bonus is no longer effective. Do you want to pause and change Gear?', buttons Ignore and Replace). Not in the game log; it pops up again on every gathering tick until 'Don't show again today' is ticked. Anchor of the box tick (offset -203,-1) and of Ignore (offset -72,105)."
+  },
+  {
+    "id": "gear.notice.emptybox",
+    "imageFile": "gear.notice.emptybox.png",
+    "expectedCenter": {
+      "x": 654,
+      "y": 607
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.02,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gear_notice_full.png (copy of proofs/out/glove_now.png, live 2026-10-18) ClientFull offset (0,0) scale 1; client rect (633,586)-(675,629): the EMPTY 'Don't show again today' checkbox of the gear durability Notice (incident 20, 2026-10-24: the notice came back 24 times in one trip although the companion ticked the box each time). Found = the box is empty and may be ticked; not found (a mark in it, or unclear) = the box is never clicked (it is a toggle). Never clicked itself."
+  },
+  {
+    "id": "gear.notice.replace",
+    "imageFile": "gear.notice.replace.png",
+    "expectedCenter": {
+      "x": 1127,
+      "y": 715
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/gear_notice_full.png (copy of proofs/out/glove_now.png, live 2026-10-18) ClientFull offset (0,0) scale 1; client rect (1038,676)-(1217,754): the notice's 'Replace' button. Identity only: NEVER pressed (it would pause gathering and open the gear change)."
+  }
+]

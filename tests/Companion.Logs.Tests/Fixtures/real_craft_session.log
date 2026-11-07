@@ -1,0 +1,145 @@
+2026-10-13 22:51:04.580	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_LIFESKILL_MAKE_VIEW
+
+2026-10-13 22:51:13.925	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_LIFESKILL_MAKE_VIEW
+
+2026-10-13 22:51:13.926	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:14.240	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_LIFE_ALCHEMIST_MAKE_POT
+
+2026-10-13 22:51:17.041	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:17.062	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:18.721	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:20.040	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:20.043	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:21.720	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:23.040	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:23.044	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:24.721	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:25.941	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:51:25.944	Log	UpdateModule LostFocuse 
+|	UnityEngine.EventSystems.EventSystem:TickModules()
+|	
+
+2026-10-13 22:51:26.022	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:26.054	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:27.711	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:29.030	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:29.034	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:30.710	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:31.010	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_MAIL
+
+2026-10-13 22:51:31.630	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:31.633	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:33.310	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:34.230	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:34.233	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:35.911	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:36.810	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:36.834	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:38.510	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:39.014	Log	[StageMgr] OnApplicationFocus RecoverFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:51:39.431	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:39.435	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:40.270	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_SCROLL_TIPS_MIDDLE
+
+2026-10-13 22:51:40.273	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_SCROLL_TIPS_MIDDLE
+
+2026-10-13 22:51:40.471	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_TEAM_QUICK_ACCEPT_VIEW
+
+2026-10-13 22:51:41.110	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:42.031	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:42.034	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:43.711	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:44.630	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:44.634	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:46.271	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_TEAM_QUICK_ACCEPT_VIEW
+
+2026-10-13 22:51:46.311	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:47.210	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:47.233	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:48.110	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_TEAM_MAIN
+
+2026-10-13 22:51:48.912	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:49.010	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_TEAM_APPLY_LIST
+
+2026-10-13 22:51:49.010	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_LIFESKILL_MAKE_VIEW
+
+2026-10-13 22:51:49.811	Log	[LOG] -> module/lifeskill/cook/lifeskill_cook_mgr.lua:907    is_block     10.437787465143    -51.478912430509
+
+2026-10-13 22:51:49.814	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:50.731	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_TEAM_APPLY_LIST
+
+2026-10-13 22:51:51.491	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_ITEM_GET_TIP
+
+2026-10-13 22:51:52.112	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_LIFE_ALCHEMIST_MAKE_POT
+
+2026-10-13 22:51:52.130	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:547    stack over -> remove    UI_TEAM_QUICK_ACCEPT_VIEW
+
+2026-10-13 22:51:52.130	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_TEAM_QUICK_ACCEPT_VIEW
+
+2026-10-13 22:51:52.395	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_TEAM_MAIN
+
+2026-10-13 22:51:52.400	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:547    stack over -> remove    UI_TEAM_APPLY_LIST
+
+2026-10-13 22:51:52.400	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:582    [ui_mgr]dispose_ui immediately    UI_TEAM_APPLY_LIST
+
+2026-10-13 22:51:55.252	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:51:55.255	Log	UpdateModule LostFocuse 
+|	UnityEngine.EventSystems.EventSystem:TickModules()
+|	
+
+2026-10-13 22:52:25.011	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_TEAM_MAIN
+
+2026-10-13 22:52:25.012	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_LIFE_ALCHEMIST_MAKE_POT
+
+2026-10-13 22:52:25.012	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1801    [ui_mgr]check_clean_unused - do dispose    UI_ITEM_GET_TIP
+

@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "screens": [
+    {
+      "id": "teahouse",
+      "logUiName": "UI_ACTIVITY_CENTER",
+      "anchorTemplateIds": [
+        "teahouse.title",
+        "teahouse.score",
+        "teahouse.current",
+        "teahouse.frame.topright",
+        "teahouse.frame.bottomright"
+      ],
+      "isHud": false,
+      "status": "known",
+      "escCloses": true,
+      "notes": "What's On with the Kitty Tea House page selected (2026-10-30). Only the 6x6 board (client x 1023-1808, y 155-938) is pressed; the deny zones box the page's real controls tightly (event list, help, reward chests, Rankings, current piece, Shop, close), so no board square is within the 120 px guard of one (2026-10-30 live: broad zones made every edge square 'near', which turned off the off-screen anchor check)."
+    }
+  ],
+  "buttons": [],
+  "denyZones": [
+    {
+      "id": "teahouse.events",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 0,
+        "top": 0,
+        "right": 490,
+        "bottom": 1009
+      },
+      "label": "What's On title and its event list"
+    },
+    {
+      "id": "teahouse.help",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 505,
+        "top": 215,
+        "right": 575,
+        "bottom": 285
+      },
+      "label": "The Tea House help button"
+    },
+    {
+      "id": "teahouse.rewards",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 555,
+        "top": 290,
+        "right": 950,
+        "bottom": 425
+      },
+      "label": "The three reward chests"
+    },
+    {
+      "id": "teahouse.rankings",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 555,
+        "top": 510,
+        "right": 700,
+        "bottom": 650
+      },
+      "label": "Rankings"
+    },
+    {
+      "id": "teahouse.current",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 565,
+        "top": 655,
+        "right": 690,
+        "bottom": 805
+      },
+      "label": "The piece in hand"
+    },
+    {
+      "id": "teahouse.shop",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 520,
+        "top": 860,
+        "right": 730,
+        "bottom": 965
+      },
+      "label": "The Tea House Shop (UI_SINGLE_SHOP, forbidden anyway)"
+    },
+    {
+      "id": "teahouse.close",
+      "screenId": "teahouse",
+      "clientRect": {
+        "left": 1795,
+        "top": 0,
+        "right": 1920,
+        "bottom": 110
+      },
+      "label": "What's On close button"
+    }
+  ]
+}

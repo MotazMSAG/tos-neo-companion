@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Kitty Tea House helper (2026-10-29): the event mini-game's rules, the move finder and the board reader. Pure: the
+    reader works on a Frame the host captured (look only), the learned pictures and points are plain data the
+    host stores. Sends no input of any kind; the user places every piece. References Companion.Contracts only.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.TeaHouse</RootNamespace>
+    <AssemblyName>Companion.TeaHouse</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.TeaHouse.Tests" />
+  </ItemGroup>
+</Project>

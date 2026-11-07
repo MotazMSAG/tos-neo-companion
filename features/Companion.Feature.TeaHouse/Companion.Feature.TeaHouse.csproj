@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "teahouse" (2026-10-30): TeaHousePlay, the Kitty Tea House helper's hands (auto-play). The helper in the tray
+    app decides every move; this job presses the squares through the engine (slide clicks anchored on the Tea House
+    title) and confirms each press from the game log. References Companion.Contracts ONLY; the shared Kit sources are
+    compiled in. data\** is copied to <out>\features\teahouse\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.TeaHouse</RootNamespace>
+    <AssemblyName>Companion.Feature.TeaHouse</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\teahouse\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1952 @@
+[
+  {
+    "id": "crafting.resync",
+    "description": "Navigate to the Ability view and read craft.pairs (owned/required per material). Stubs until menu.ability is cut (Calibrate) and craft.pairs is surveyed (pair order, insufficient colour).",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "survey.menu.ability",
+        "pre": {},
+        "action": {
+          "type": "needsSurvey",
+          "what": "menu.ability"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "open",
+        "pre": {},
+        "action": {
+          "type": "navigate",
+          "screenId": "ability"
+        },
+        "expect": {
+          "screen": "ability"
+        },
+        "timeoutMs": 6000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "survey.craft.pairs",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "craft.pairs"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.pairs",
+          "outputKey": "pairs"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.prepare",
+    "description": "Ability view: select the planned recipe, set and read back the quantity (craft.quantity); clicks fall under the crafting gate. Stubs until recipe list, quantity selector, craft.quantity are surveyed.",
+    "kind": "navigation",
+    "gate": "crafting",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "survey.recipe.select",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "craft.recipe.select"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "survey.quantity.set",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "craft.quantity.set"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "survey.quantity.read",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "craft.quantity"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.quantity",
+          "outputKey": "quantity"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.commit",
+    "description": "Commit (Make, gate crafting, character allowed), await the craft without input; ends at the craft view or HUD (CR-04). Stub until the Make button is surveyed. Never Esc during a craft.",
+    "kind": "commit",
+    "gate": "crafting",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "commit",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "craft.commit.button"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "commit"
+      },
+      {
+        "id": "await",
+        "pre": {},
+        "action": {
+          "type": "awaitCraft",
+          "requestedTicks": 1
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            },
+            {
+              "verb": "openConst",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            }
+          ],
+          "alternatives": [
+            {
+              "screen": "hud.collapsed"
+            },
+            {
+              "screen": "hud.expanded"
+            }
+          ]
+        },
+        "timeoutMs": 15000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.loop",
+    "description": "CraftLoop round (live run 2026-10-14): OpenAbility, Esc the phase announcement if open, favourites slot, max, Make (commit), await. The job keeps one slot step.",
+    "kind": "commit",
+    "gate": "crafting",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "open",
+        "pre": {},
+        "action": {
+          "type": "call",
+          "procedureId": "OpenAbility"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "announce.close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_LIFE_STAGE_PREVIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "slot.01",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -227,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.02",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -114,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.03",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -1,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.04",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 112,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.05",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 225,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.06",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -227,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.07",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -114,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.08",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -1,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.09",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 112,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "slot.10",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 225,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "selectionVerified"
+      },
+      {
+        "id": "max",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.qty.max"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "make",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.make"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFE_ALCHEMIST_MAKE_POT"
+            },
+            {
+              "verb": "show",
+              "uiName": "UI_LIFE_ENCHANT_TABLE"
+            },
+            {
+              "verb": "show",
+              "uiName": "UI_ITEM_TIPS_PASS_TOUCH"
+            }
+          ]
+        },
+        "timeoutMs": 8000,
+        "flags": "commit"
+      },
+      {
+        "id": "await",
+        "pre": {},
+        "action": {
+          "type": "awaitCraft",
+          "requestedTicks": 1
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.qty",
+    "description": "Type a batch count on the Make view (2026-10-15): press the quantity, clear, digits, OK on the game's keypad (it clamps to the most possible). Not a commit: Make stays in crafting.loop.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 12,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "qty",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.materials.header",
+          "offset": {
+            "x": -175,
+            "y": 231
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "qty.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 500
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.clear",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.0",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 367
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.1",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.2",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.3",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.4",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.5",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.6",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.7",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.8",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.9",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.ok",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -45,
+            "y": 367
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "qty.done",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 400
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "esc",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.scanFavorites",
+    "description": "ScanFavorites slot run (read-only, no commit): open Ability if needed, Esc the announcement if open, select one favourites slot (anchor + offset as crafting.loop), wait, read product and materials",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "open",
+        "pre": {},
+        "action": {
+          "type": "call",
+          "procedureId": "OpenAbility"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            },
+            {
+              "verb": "openConst",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "announce.close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_LIFE_STAGE_PREVIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "slot.01",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -227,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.02",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -114,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.03",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -1,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.04",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 112,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.05",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 225,
+            "y": -258
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.06",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -227,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.07",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -114,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.08",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": -1,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.09",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 112,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "slot.10",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.fav.anchor",
+          "offset": {
+            "x": 225,
+            "y": -118
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 1000
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read.product",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.product",
+          "outputKey": "product"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read.pairs",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.pairs",
+          "outputKey": "pairs"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.scanList",
+    "description": "ScanRecipeList run (read-only): open Ability if needed, then drag the list to the top, or select and read one card, or drag up two rows, or press the unselected Make tab back to the list",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "open",
+        "pre": {},
+        "action": {
+          "type": "call",
+          "procedureId": "OpenAbility"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            },
+            {
+              "verb": "openConst",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "announce.close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_LIFE_STAGE_PREVIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "top",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "drag",
+          "templateId": "craft.list.anchor",
+          "offset": {
+            "x": -65,
+            "y": 297
+          },
+          "delta": {
+            "x": 0,
+            "y": 280
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "card",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.list.anchor",
+          "offset": {
+            "x": -121,
+            "y": 375
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 400
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read.product",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.product",
+          "outputKey": "product"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read.pairs",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "read",
+          "readerId": "craft.pairs",
+          "outputKey": "pairs"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "drag",
+          "templateId": "craft.list.anchor",
+          "offset": {
+            "x": -65,
+            "y": 737
+          },
+          "delta": {
+            "x": 0,
+            "y": -280
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 300
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tab",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.make.tab"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tab.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 800
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.productTip",
+    "description": "Product item tip (read-only, no commit; live 2026-10-15): click the selected recipe's product icon (materials header anchor + offset); the game logs the item name and id; Esc closes the tip",
+    "kind": "navigation",
+    "gate": "none",
+    "verifiesSelection": true,
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "tip.open",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "craft.materials.header",
+          "offset": {
+            "x": -140,
+            "y": -266
+          }
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_ITEM_TIPS_PASS_TOUCH"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tip.close",
+        "pre": {
+          "topUi": "UI_ITEM_TIPS_PASS_TOUCH"
+        },
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_ITEM_TIPS_PASS_TOUCH"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.gather",
+    "description": "Gathering Helper (2026-10-15): open it, drag its list, press a tile, type the target on the keypad, Begin (travels), Finish when complete. The job runs subsets of these steps.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 60,
+      "maxClicks": 20,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "open",
+        "pre": {},
+        "action": {
+          "type": "call",
+          "procedureId": "OpenAbility"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            },
+            {
+              "verb": "openConst",
+              "uiName": "UI_LIFESKILL_MAKE_VIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "announce.close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_LIFE_STAGE_PREVIEW"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "tab",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "gather.tab"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tab.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 1000
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "helper",
+        "pre": {
+          "topUi": "UI_LIFESKILL_MAKE_VIEW"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "gather.view.anchor",
+          "offset": {
+            "x": -1599,
+            "y": -386
+          }
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_LIFESKILL_AUTO_COLLECT"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "top",
+        "pre": {},
+        "action": {
+          "type": "drag",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 10,
+            "y": 124
+          },
+          "delta": {
+            "x": 0,
+            "y": 240
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll",
+        "pre": {},
+        "action": {
+          "type": "drag",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 10,
+            "y": 384
+          },
+          "delta": {
+            "x": 0,
+            "y": -240
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 800
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tile",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": -247,
+            "y": 184
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "set.close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_LIFESKILL_AUTO_COLLECT_SET"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "qty",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.set.anchor",
+          "offset": {
+            "x": 170,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "qty.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 500
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.clear",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.0",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 367
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.1",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.2",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.3",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 90
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.4",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.5",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.6",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 182
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.7",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -180,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.8",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -90,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.9",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": 0,
+            "y": 275
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "key.ok",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "keypad.anchor",
+          "offset": {
+            "x": -45,
+            "y": 367
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "set.confirm",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.set.anchor",
+          "offset": {
+            "x": 167,
+            "y": 150
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "set.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 800
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "begin",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.begin"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "changesAutoCollect"
+      },
+      {
+        "id": "finish",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.finish"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "changesAutoCollect"
+      },
+      {
+        "id": "finish.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 1000
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "esc",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "close",
+        "pre": {},
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "unqueue.1",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 157,
+            "y": -208
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "unqueue.2",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 322,
+            "y": -208
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "unqueue.3",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 487,
+            "y": -208
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "unqueue.4",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.anchor",
+          "offset": {
+            "x": 652,
+            "y": -208
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "unqueue.settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 600
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "snapshot",
+        "pre": {},
+        "action": {
+          "type": "capture",
+          "label": "gather-walk",
+          "scope": "gatherHelper"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.gatherTip",
+    "description": "Gathering target picker's item tip (read-only; live 2026-10-15): click the picker's picture (gather.set.anchor + offset); the game logs the item name and id; Esc closes the tip",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "tip.open",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gather.set.anchor",
+          "offset": {
+            "x": 180,
+            "y": -288
+          }
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "show",
+              "uiName": "UI_ITEM_TIPS_PASS_TOUCH"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tip.close",
+        "pre": {
+          "topUi": "UI_ITEM_TIPS_PASS_TOUCH"
+        },
+        "action": {
+          "type": "key",
+          "key": "escape"
+        },
+        "expect": {
+          "uiEvents": [
+            {
+              "verb": "hideTop",
+              "uiName": "UI_ITEM_TIPS_PASS_TOUCH"
+            }
+          ]
+        },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "crafting.gearNotice",
+    "description": "Gear durability Notice (2026-10-18): tick 'Don't show again today', then Ignore (both via gear.notice.box + offset); Replace is never pressed. Not logged; it returns every tick until ticked.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 10,
+      "maxClicks": 4,
+      "maxEsc": 2,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "box",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gear.notice.box",
+          "offset": {
+            "x": -203,
+            "y": -1
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "duringAutoCollect"
+      },
+      {
+        "id": "ignore",
+        "pre": {},
+        "action": {
+          "type": "click",
+          "templateId": "gear.notice.box",
+          "offset": {
+            "x": -72,
+            "y": 105
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "duringAutoCollect"
+      }
+    ]
+  },
+  {
+    "id": "crafting.makeSnapshot",
+    "description": "Diagnostics (incident 26): one screenshot of the Make view after a Make press with no effect. Capture only, no input; chat blacked out; refused unless the Make view is open.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "settle",
+        "pre": {},
+        "action": {
+          "type": "wait",
+          "durationMs": 800
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "shot",
+        "pre": {},
+        "action": {
+          "type": "capture",
+          "label": "make-no-effect",
+          "scope": "makeView"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1296 @@
+[
+  {
+    "id": "teahouse.board",
+    "description": "Kitty Tea House board presses, one click step per square (sq.00 the tray .. sq.35), each anchored on its nearest static picture; never an Esc reset (it closes the minigame).",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 0,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 20000
+    },
+    "steps": [
+      {
+        "id": "sq.00",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 317,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.01",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 448,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.02",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -425,
+            "y": 79
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.03",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -295,
+            "y": 79
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.04",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -164,
+            "y": 79
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.05",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -33,
+            "y": 79
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.06",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 317,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.07",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 448,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.08",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -425,
+            "y": 209
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.09",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -295,
+            "y": 209
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.10",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -164,
+            "y": 209
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.11",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -33,
+            "y": 209
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.12",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": -76
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.13",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 461,
+            "y": -76
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.14",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 592,
+            "y": -76
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.15",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -295,
+            "y": 339
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.16",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -164,
+            "y": 339
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.17",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -33,
+            "y": 339
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.18",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.19",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 461,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.20",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 592,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.21",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -350,
+            "y": -350
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.22",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -219,
+            "y": -350
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.23",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -88,
+            "y": -350
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.24",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 461,
+            "y": -42
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.25",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 461,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.26",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -480,
+            "y": -219
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.27",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -350,
+            "y": -219
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.28",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -219,
+            "y": -219
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.29",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -88,
+            "y": -219
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.30",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 461,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.31",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 592,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.32",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -480,
+            "y": -89
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.33",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -350,
+            "y": -89
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.34",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -219,
+            "y": -89
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.35",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -88,
+            "y": -89
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      }
+    ]
+  },
+  {
+    "id": "teahouse.board.alt",
+    "description": "The board presses again, each anchored on its second-nearest static picture: TeaHousePlay uses it when the nearest picture is hidden; never an Esc reset.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 0,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 20000
+    },
+    "steps": [
+      {
+        "id": "sq.00",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": -336
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.01",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -556,
+            "y": 79
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.02",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 579,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.03",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 709,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.04",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 840,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.05",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 971,
+            "y": 53
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.06",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": -206
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.07",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 461,
+            "y": -206
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.08",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 579,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.09",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 709,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.10",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 840,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.11",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 971,
+            "y": 183
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.12",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 317,
+            "y": 313
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.13",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.title",
+          "offset": {
+            "x": 448,
+            "y": 313
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.14",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -425,
+            "y": 339
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.15",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 722,
+            "y": -76
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.16",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 853,
+            "y": -76
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.17",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -88,
+            "y": -481
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.18",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 461,
+            "y": -173
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.19",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 592,
+            "y": -173
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.20",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 723,
+            "y": -173
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.21",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 722,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.22",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 853,
+            "y": 55
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.23",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.topright",
+          "offset": {
+            "x": -33,
+            "y": 470
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.24",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.25",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 592,
+            "y": -42
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.26",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 592,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.27",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 722,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.28",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 853,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.29",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 984,
+            "y": 186
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.30",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.score",
+          "offset": {
+            "x": 330,
+            "y": 316
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.31",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.frame.bottomright",
+          "offset": {
+            "x": -611,
+            "y": -89
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.32",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 723,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.33",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 853,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.34",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 984,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      },
+      {
+        "id": "sq.35",
+        "pre": {
+          "topUi": "UI_ACTIVITY_CENTER"
+        },
+        "action": {
+          "type": "click",
+          "templateId": "teahouse.current",
+          "offset": {
+            "x": 1115,
+            "y": 88
+          }
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "quickAttribution"
+      }
+    ]
+  },
+  {
+    "id": "teahouse.restart",
+    "description": "The end screen (UI_TRIPLE_TOWN_SETTLE) Restart button: a stub until a capture of the end screen is cut.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 0,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 20000
+    },
+    "steps": [
+      {
+        "id": "survey.teahouse.restart",
+        "pre": {
+          "topUi": "UI_TRIPLE_TOWN_SETTLE"
+        },
+        "action": {
+          "type": "needsSurvey",
+          "what": "teahouse.restart"
+        },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

@@ -1,0 +1,128 @@
+[
+  {
+    "id": "homestead.status",
+    "description": "Reset, open Lumi's Hut (lumi_hut), read products stored/capacity (lumi.products), Esc closes it. Stubs until menu.homestead is cut (Calibrate) and lumi.products is surveyed at full scale.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "survey.menu.homestead",
+        "pre": {},
+        "action": { "type": "needsSurvey", "what": "menu.homestead" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "open",
+        "pre": {},
+        "action": { "type": "navigate", "screenId": "lumi_hut" },
+        "expect": { "screen": "lumi_hut" },
+        "timeoutMs": 6000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "survey.lumi.products",
+        "pre": { "topUi": "UI_HOME_PET_VIEW" },
+        "action": { "type": "needsSurvey", "what": "lumi.products" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read",
+        "pre": { "topUi": "UI_HOME_PET_VIEW" },
+        "action": { "type": "read", "readerId": "lumi.products", "outputKey": "products" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_HOME_PET_VIEW" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_HOME_PET_VIEW" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "homestead.collect",
+    "description": "Reset, open Lumi's Hut, press the collect button (Commit, gate homestead), Esc. Stubs until menu.homestead is cut and the collect button is surveyed (template, expected UI).",
+    "kind": "commit",
+    "gate": "homestead",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 6,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "survey.menu.homestead",
+        "pre": {},
+        "action": { "type": "needsSurvey", "what": "menu.homestead" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "open",
+        "pre": {},
+        "action": { "type": "navigate", "screenId": "lumi_hut" },
+        "expect": { "screen": "lumi_hut" },
+        "timeoutMs": 6000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "collect",
+        "pre": { "topUi": "UI_HOME_PET_VIEW" },
+        "action": { "type": "needsSurvey", "what": "homestead.collect.button" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "commit"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_HOME_PET_VIEW" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_HOME_PET_VIEW" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

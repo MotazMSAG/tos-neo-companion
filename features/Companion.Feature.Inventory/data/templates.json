@@ -1,0 +1,72 @@
+[
+  {
+    "id": "stock.anchor",
+    "imageFile": "stock.anchor.png",
+    "expectedCenter": { "x": 1755, "y": 577 },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_ability_top_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1700,555)-(1810,600); the SELECTED 'Stock' tab of the Ability view's right column (fixed; the hanging 'Stock' title swings, NCC down to 0.88): identity of the Stock tab and anchor of every Stock click and drag (anchor + offset); never clicked itself"
+  },
+  {
+    "id": "stock.sub.ability.on",
+    "imageFile": "stock.sub.ability.on.png",
+    "expectedCenter": { "x": 380, "y": 230 },
+    "searchRadius": 8,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "none",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_ability_top_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (272,190)-(488,270); the Ability sub-tab SELECTED (teal, merging into the panel; the label alone matches the brown unselected tab at 0.98, with its bottom edge at 0.72): identity of the Ability sub-tab (reader anchor); never clicked"
+  },
+  {
+    "id": "stock.sub.homestead.on",
+    "imageFile": "stock.sub.homestead.on.png",
+    "expectedCenter": { "x": 610, "y": 230 },
+    "searchRadius": 8,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "none",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_homestead_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (502,190)-(718,270); the Homestead sub-tab SELECTED: identity of the Homestead sub-tab (reader anchor); never clicked"
+  },
+  {
+    "id": "stock.sub.tailor.on",
+    "imageFile": "stock.sub.tailor.on.png",
+    "expectedCenter": { "x": 842, "y": 230 },
+    "searchRadius": 8,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "none",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_tailor_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (734,190)-(950,270); the Tailor sub-tab SELECTED: identity of the Tailor sub-tab (reader anchor); never clicked"
+  },
+  {
+    "id": "stock.sub.hyperweather.on",
+    "imageFile": "stock.sub.hyperweather.on.png",
+    "expectedCenter": { "x": 1072, "y": 230 },
+    "searchRadius": 8,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "none",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_hyperweather_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (964,190)-(1180,270); the Hyperweather sub-tab SELECTED: identity of the Hyperweather sub-tab (reader anchor); never clicked"
+  }
+]

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Offline trainer for the Kitty Tea House helper's learned board value (TeaNet): self-play on this PC at below-normal
+    priority, saving the weights to RuntimeDir\teahouse\net.bin for the helper to load. Touches no game window.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Companion.TeaHouse.Trainer</RootNamespace>
+    <AssemblyName>Companion.TeaHouse.Trainer</AssemblyName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.TeaHouse\Companion.TeaHouse.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "crafting" (SPEC 11.4): Craft {item, qty} and KeepStock {}, Commit jobs gated by automation.crafting and
+    an Allowed character. The flow (resync, plan, prepare, commit, await, derive, early-stop handling) is implemented;
+    its procedures carry explicit needsSurvey stubs (recipe selection, quantity, quantity reader, Make button), so the
+    jobs end NeedsSurvey with zero inputs until surveyed. CraftLoop {slot, count, batch} repeats the surveyed Make
+    round (crafting.loop, live run 2026-10-14). References Companion.Contracts ONLY; the shared Kit sources are compiled
+    in. data\** is copied to <out>\features\crafting\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.Crafting</RootNamespace>
+    <AssemblyName>Companion.Feature.Crafting</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\crafting\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

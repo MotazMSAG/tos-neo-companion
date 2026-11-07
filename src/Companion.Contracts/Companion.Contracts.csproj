@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Shared contracts for every unit (SPEC.md section 3). Builders may NOT change this project.
+    No package references, no project references, no P/Invoke, no I/O: only interfaces, records, enums and constants.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Contracts</RootNamespace>
+    <AssemblyName>Companion.Contracts</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>

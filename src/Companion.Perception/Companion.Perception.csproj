@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "vision-ocr" (SPEC 11.1, 13): Windows OCR through the WinRT projection that ships with the
+    net10.0-windows10.0.19041.0 TFM (no package), digit-template reader, declarative screen readers and their catalog.
+    References Companion.Contracts only. No P/Invoke, no window access, no file access, no network.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Perception</RootNamespace>
+    <AssemblyName>Companion.Perception</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Perception.Tests" />
+  </ItemGroup>
+</Project>

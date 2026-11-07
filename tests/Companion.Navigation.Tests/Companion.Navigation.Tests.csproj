@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit "engine-nav" navigation tests (SPEC 13): identification, BFS, BuildProcedure, navigator, data files. Offline only. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <OutputType>Library</OutputType>
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA1861</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Navigation\Companion.Navigation.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Engine\Companion.Engine.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- shared scripted fakes of the unit (no window is ever touched) -->
+    <Compile Include="..\Companion.Engine.Tests\Fakes\*.cs" Link="Fakes\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\ui-map.json" Link="data\ui-map.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\data\procedures.json" Link="data\procedures.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

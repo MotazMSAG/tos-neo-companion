@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "homestead" (SPEC 11.4): HomesteadStatus (read-only) and HomesteadCollect (commit, automation.homestead).
+    NeedsSurvey until menu.homestead is cut, lumi.products is surveyed and the collect button is known.
+    References Companion.Contracts ONLY; the shared Kit sources are compiled in. data\** is copied to
+    <out>\features\homestead\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.Homestead</RootNamespace>
+    <AssemblyName>Companion.Feature.Homestead</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\homestead\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

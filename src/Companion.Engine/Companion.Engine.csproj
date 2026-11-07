@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "engine-nav" (SPEC 2): procedure runner with the recovery state machine, procedure catalog, screen service,
+    pause control, journal and artifact store. References ONLY Companion.Contracts (no P/Invoke, no window access:
+    every game interaction goes through the IGameIo contract).
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Engine</RootNamespace>
+    <AssemblyName>Companion.Engine</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Engine.Tests" />
+    <InternalsVisibleTo Include="Companion.Navigation.Tests" />
+  </ItemGroup>
+</Project>

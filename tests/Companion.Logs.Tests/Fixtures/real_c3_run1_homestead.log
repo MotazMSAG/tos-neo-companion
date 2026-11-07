@@ -1,0 +1,98 @@
+2026-10-13 22:58:51.837	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_HOME_ORDER
+
+2026-10-13 22:58:52.577	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1688    [ui mgr]hide top ui    UI_HOME_ORDER
+
+2026-10-13 22:58:52.977	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_HOME_ORDER
+
+2026-10-13 22:58:53.641	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:58:53.644	Log	UpdateModule LostFocuse 
+|	UnityEngine.EventSystems.EventSystem:TickModules()
+|	
+
+2026-10-13 22:58:53.696	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_NPC_TALK
+
+2026-10-13 22:58:53.699	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_NPC_TALK
+
+2026-10-13 22:58:55.940	Log	[StageMgr] OnApplicationFocus RecoverFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:58:55.978	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:00.278	Log	[StageMgr] OnApplicationFocus RecoverFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:00.617	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1688    [ui mgr]hide top ui    nil
+
+2026-10-13 22:59:01.437	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:02.717	Log	[StageMgr] OnApplicationFocus RecoverFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:03.417	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_HOME_PET_VIEW
+
+2026-10-13 22:59:03.837	Log	[StageMgr] OnApplicationFocus LostFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:03.839	Log	UpdateModule LostFocuse Name: Image_sharedAnchor (UnityEngine.GameObject)
+|	module: Name: Canvas_HomePetMain (UnityEngine.GameObject)
+|	eventCamera: UICamera (UnityEngine.Camera)
+|	sortOrderPriority: -2147483648
+|	renderOrderPriority: -2147483648
+|	distance: 7499
+|	index: 0
+|	depth: 1
+|	worldNormal: (0.00, 0.00, -1.00)
+|	worldPosition: (7.65, 0.59, 7500.00)
+|	screenPosition: (1732.00, 564.00)
+|	module.sortOrderPriority: -2147483648
+|	module.renderOrderPriority: -2147483648
+|	sortingLayer: -1246471439
+|	sortingOrder: 0
+|	UnityEngine.EventSystems.EventSystem:TickModules()
+|	
+
+2026-10-13 22:59:14.867	Log	[StageMgr] OnApplicationFocus RecoverFocus
+|	UnityEngine.Logger:Log(LogType, Object)
+|	lss.StageMgr:OnApplicationFocus(Boolean)
+|	
+
+2026-10-13 22:59:14.887	Log	[LOG] -> lss_start.lua:856    Unity Application Notify:    OnScreenSizeChange
+
+2026-10-13 22:59:14.887	Log	[LOG] -> graphic_cfg.lua:242    [graphic] Device resolution    1902    991
+
+2026-10-13 22:59:15.556	Log	[LOG] -> lss_start.lua:856    Unity Application Notify:    OnScreenSizeChange
+
+2026-10-13 22:59:15.556	Log	[LOG] -> graphic_cfg.lua:242    [graphic] Device resolution    1920    1009
+
+2026-10-13 22:59:15.896	Log	[LOG] -> graphic_cfg.lua:284    [graphic] Current screen resolution    1920    1009
+
+2026-10-13 22:59:16.679	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_HOME_PET_VIEW
+
+2026-10-13 22:59:19.698	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_NPC_TALK
+
+2026-10-13 22:59:19.700	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1715    open const ui    UI_NPC_TALK
+
+2026-10-13 22:59:21.979	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_MAIN_MORE
+
+2026-10-13 22:59:23.517	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1077    <color=yellow>show_ui</color>    UI_MAIN_GACHA
+
+2026-10-13 22:59:23.519	Log	[LOG] -> module/foundation/ui/ui_mgr.lua:1724    [ui_mgr]add to close_list    UI_MAIN_MORE
+

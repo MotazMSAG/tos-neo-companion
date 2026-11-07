@@ -1,0 +1,213 @@
+// Core procedures (SPEC 9), deserialized once at host start with ContractJson.Options as ProcedureDefinition[].
+// Steps are data: the engine adds the global gates (SPEC 6.3), the pre-flight (templates clickable, readers ready, no
+// reachable needsSurvey stub) and the recovery state machine. Limits may only lower the hard ceilings.
+[
+  {
+    "id": "Reset",
+    "description": "Esc until 'hide top ui nil' (each Esc must make progress; Esc-safe or own UIs only)",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 10, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] },
+        "timeoutMs": 3000
+      }
+    ]
+  },
+  {
+    "id": "OpenBagKey",
+    "description": "Reset, key B opens UI_BAG_MAIN, Esc closes it",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "open",
+        "pre": { "hudClean": true },
+        "action": { "type": "key", "key": "b" },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_BAG_MAIN" }, { "verb": "openConst", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_BAG_MAIN" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000
+      }
+    ]
+  },
+  {
+    "id": "OpenBagClick",
+    "description": "Reset, slide click on hud.bag opens UI_BAG_MAIN, Esc closes it (near the timed-offer zone: 1.5 s stillness)",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "open",
+        "pre": { "hudClean": true, "templatesPresent": [ "hud.bag" ] },
+        "action": { "type": "click", "templateId": "hud.bag" },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_BAG_MAIN" }, { "verb": "openConst", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_BAG_MAIN" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000
+      }
+    ]
+  },
+  {
+    "id": "ExpandMenu",
+    "description": "Reset, then bring the right HUD menu to Expanded (no click if already expanded)",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "toggle",
+        "pre": { "hudClean": true },
+        "action": { "type": "toggleHud", "target": "expanded" },
+        "expect": { "hud": "expanded" },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      }
+    ]
+  },
+  {
+    "id": "CollapseMenu",
+    "description": "Reset, then bring the right HUD menu to Collapsed (needs hud.toggle.expanded Verified; NeedsSurvey until then)",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "toggle",
+        "pre": { "hudClean": true },
+        "action": { "type": "toggleHud", "target": "collapsed" },
+        "expect": { "hud": "collapsed" },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      }
+    ]
+  },
+  {
+    "id": "OpenAbility",
+    "description": "Reset, expand the menu, click Ability (UI_LIFESKILL_MAKE_VIEW stays open). menu.ability is provisional: NeedsSurvey until Calibrate",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "expand",
+        "pre": { "hudClean": true },
+        "action": { "type": "toggleHud", "target": "expanded" },
+        "expect": { "hud": "expanded" },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "open",
+        "pre": { "hudClean": true, "hud": "expanded" },
+        "action": { "type": "click", "templateId": "menu.ability" },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_LIFESKILL_MAKE_VIEW" }, { "verb": "openConst", "uiName": "UI_LIFESKILL_MAKE_VIEW" } ] },
+        "timeoutMs": 6000
+      }
+    ]
+  },
+  {
+    "id": "Calibrate",
+    "description": "Full-scale right HUD strip captures (initial, expanded) for template cutting; ends EXPANDED (2026-10-14: the menu stays expanded, only CollapseMenu collapses it)",
+    "kind": "maintenance",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3, "maxUncountedPerStep": 4, "maxStepBacks": 1, "maxRestarts": 2, "maxPreconditionLost": 2,
+      "maxInputBatches": 25, "maxClicks": 6, "maxEsc": 8, "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] }
+      },
+      {
+        "id": "initial",
+        "pre": {},
+        "action": { "type": "capture", "label": "initial", "scope": "hudStripRight" },
+        "expect": {}
+      },
+      {
+        "id": "expand",
+        "pre": { "hudClean": true },
+        "action": { "type": "toggleHud", "target": "expanded" },
+        "expect": { "hud": "expanded" },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "cap-exp",
+        "pre": { "hud": "expanded" },
+        "action": { "type": "capture", "label": "expanded", "scope": "hudStripRight" },
+        "expect": {}
+      }
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "survey" (SPEC 11.4): SurveyScreen, passive (NO input): identify the current screen, save template crops
+    (or the full frame with the chat panel masked when fullFrame=true) and a UI-state summary. Ready now.
+    References Companion.Contracts ONLY; the shared Kit sources are compiled in. data\** is copied to
+    <out>\features\survey\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.Survey</RootNamespace>
+    <AssemblyName>Companion.Feature.Survey</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\survey\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

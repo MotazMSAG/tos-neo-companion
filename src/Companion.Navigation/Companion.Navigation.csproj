@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "engine-nav" (SPEC 8): ui-map catalog (loader + validator), screen identification, BFS paths and the
+    navigator (executes paths through IProcedureRunner). References ONLY Companion.Contracts.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Navigation</RootNamespace>
+    <AssemblyName>Companion.Navigation</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Navigation.Tests" />
+  </ItemGroup>
+</Project>

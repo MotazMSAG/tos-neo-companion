@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "core-io" tests (SPEC 13). OFFLINE ONLY: GameIO is driven through its internal IWin32 seam with a fake message
+    sink, a fake window table and fake cursor samples. No test sends a message to a real window, calls SetWindowPos or
+    PrintWindow on a real window, elevates, or starts Companion.App. StaticRulesTests reads source files only.
+  -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.GameIO\Companion.GameIO.csproj" />
+    <!-- Pure helpers of the operator-run capture probe (arguments, metrics, stop rules); nothing in it is run against a window. -->
+    <ProjectReference Include="..\..\tools\Companion.CaptureProbe\Companion.CaptureProbe.csproj" />
+  </ItemGroup>
+</Project>

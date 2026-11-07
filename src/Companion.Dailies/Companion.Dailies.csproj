@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Daily checklist (2026-11-04, DAILIES_MODULE.md): the catalog of dailies (data/dailies.json), the rule engine that
+    ticks them from game-log events, companion jobs and the user's own ticks, and the saved state. Pure: it reads no
+    file itself (the host hands it log events and the saved bytes, and writes what it returns) and sends no input of
+    any kind. References Companion.Contracts only.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Dailies</RootNamespace>
+    <AssemblyName>Companion.Dailies</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Dailies.Tests" />
+  </ItemGroup>
+</Project>

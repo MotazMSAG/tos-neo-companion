@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "knowledge-planner" (SPEC 11.2 / 11.3): per-character knowledge store (atomic writes, 5 backup generations,
+    schemaVersion, merge/drift rules), the salted character-key hasher and the pure craft planner.
+    References Companion.Contracts only. No P/Invoke, no network, no game access.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Knowledge</RootNamespace>
+    <AssemblyName>Companion.Knowledge</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Knowledge.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Empty seed files: schema examples only (no game data). The store never reads them; a test validates them. -->
+    <None Update="seed\*.json" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+</Project>

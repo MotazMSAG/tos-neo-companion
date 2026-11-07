@@ -1,0 +1,246 @@
+[
+  {
+    "id": "craft.fav.anchor",
+    "imageFile": "craft.fav.anchor.png",
+    "expectedCenter": {
+      "x": 591,
+      "y": 756
+    },
+    "searchRadius": 40,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "proofs/out/live_ability_make_full.png ClientFull offset (0,0) scale 1; client rect (537,740)-(645,773); live run 2026-10-14: 'Recent' header, scrolls with the My Favorites grid (slot click anchor)"
+  },
+  {
+    "id": "craft.list.anchor",
+    "imageFile": "craft.list.anchor.png",
+    "expectedCenter": {
+      "x": 485,
+      "y": 123
+    },
+    "motionTolerancePx": 8,
+    "searchRadius": 16,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "proofs/out/live_ability_make_full.png ClientFull offset (0,0) scale 1; client rect (424,99)-(546,147); 2026-10-14: the 'Make' title of the recipe list page (fixed while the list scrolls): anchor of the list scan's card clicks and drags (anchor + offset); never clicked itself"
+  },
+  {
+    "id": "craft.make",
+    "imageFile": "craft.make.png",
+    "expectedCenter": {
+      "x": 1472,
+      "y": 870
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "commit",
+    "fireOn": "up",
+    "gate": "crafting",
+    "source": "proofs/out/live_ability_make_full.png ClientFull offset (0,0) scale 1; client rect (1380,839)-(1564,901); live run 2026-10-14: Make button of the Make tab"
+  },
+  {
+    "id": "craft.make.tab",
+    "imageFile": "craft.make.tab.png",
+    "expectedCenter": {
+      "x": 1740,
+      "y": 300
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav, navFixed",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/stock_ability_top_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1690,278)-(1790,322); the 'Make' tab of the Ability view's right column, NOT selected (another tab is shown: Stock, Learn, Gather, Recipe Manual; the same cut as the inventory feature's stock.make.tab): ScanRecipeList presses it to go back to the recipe list after a stray press switched the tab (live 2026-10-15, the Learn tab); never on the Make tab itself; NavFixed (2026-10-16): a fixed right-column tab of the Ability view like gather.tab; with the cursor on the left part of the game's monitor its slide is cross-monitor"
+  },
+  {
+    "id": "craft.materials.header",
+    "imageFile": "craft.materials.header.png",
+    "expectedCenter": {
+      "x": 1270,
+      "y": 641
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "proofs/out/live_ability_make_full.png ClientFull offset (0,0) scale 1; client rect (1143,627)-(1397,655); 'Materials Required' header of the Make tab's recipe panel: identity anchor of the craft.pairs and craft.product readers (never clicked)"
+  },
+  {
+    "id": "craft.qty.max",
+    "imageFile": "craft.qty.max.png",
+    "expectedCenter": {
+      "x": 1264,
+      "y": 868
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "none",
+    "fireOn": "up",
+    "gate": "crafting",
+    "source": "proofs/out/live_ability_make_full.png ClientFull offset (0,0) scale 1; client rect (1233,837)-(1295,899); live run 2026-10-14: max-quantity button"
+  },
+  {
+    "id": "hud.bag",
+    "imageFile": "hud.bag.png",
+    "maskFile": "hud.bag.mask.png",
+    "maskRects": [
+      {
+        "left": 46,
+        "top": 0,
+        "right": 60,
+        "bottom": 24
+      }
+    ],
+    "expectedCenter": {
+      "x": 1748,
+      "y": 312
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav, hudAnchor, navFixed",
+    "fireOn": "down",
+    "gate": "none",
+    "source": "proofs/out/c3b_hud_right_x1440.png ClientCropFull offset (1440,0) scale 1; client rect (1718,282)-(1778,342); badge dot masked; label excluded; per-pixel mask hud.bag.mask.png (see-through background removed; glyph stable across c3b, cal_collapsed_street, cal_expanded_street and live_hud_expanded_barrels)"
+  },
+  {
+    "id": "hud.toggle.collapsed",
+    "imageFile": "hud.toggle.collapsed.png",
+    "maskFile": "hud.toggle.collapsed.mask.png",
+    "maskRects": [
+      {
+        "left": 42,
+        "top": 0,
+        "right": 56,
+        "bottom": 9
+      }
+    ],
+    "expectedCenter": {
+      "x": 1855,
+      "y": 318
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "hud": "collapsed",
+    "tags": "toggle, hudAnchor, navFixed",
+    "fireOn": "down",
+    "gate": "none",
+    "source": "proofs/out/c3b_hud_right_x1440.png ClientCropFull offset (1440,0) scale 1; client rect (1827,290)-(1883,346); badge dot masked; per-pixel mask hud.toggle.collapsed.mask.png (see-through background removed; glyph stable across c3b and cal_collapsed_street)"
+  },
+  {
+    "id": "hud.toggle.expanded",
+    "imageFile": "hud.toggle.expanded.png",
+    "maskFile": "hud.toggle.expanded.mask.png",
+    "maskRects": [
+      {
+        "left": 42,
+        "top": 0,
+        "right": 56,
+        "bottom": 8
+      }
+    ],
+    "expectedCenter": {
+      "x": 1855,
+      "y": 320
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "hud": "expanded",
+    "tags": "toggle, hudAnchor, navFixed",
+    "fireOn": "down",
+    "gate": "none",
+    "source": "Calibrate 2026-10-14 expanded.png ClientCropFull offset (1440,0) scale 1; client rect (1827,292)-(1883,348); badge dot masked; per-pixel mask hud.toggle.expanded.mask.png (see-through background removed; glyph stable across cal_expanded_street and live_hud_expanded_barrels)"
+  },
+  {
+    "id": "menu.ability",
+    "imageFile": "menu.ability.png",
+    "maskFile": "menu.ability.mask.png",
+    "maskRects": [
+      {
+        "left": 40,
+        "top": 0,
+        "right": 56,
+        "bottom": 14
+      }
+    ],
+    "expectedCenter": {
+      "x": 1734,
+      "y": 452
+    },
+    "searchRadius": 24,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "hud": "expanded",
+    "tags": "nav, navFixed",
+    "fireOn": "down",
+    "gate": "none",
+    "source": "Calibrate 2026-10-14 expanded.png ClientCropFull offset (1440,0) scale 1; client rect (1706,424)-(1762,480); badge dot masked; per-pixel mask menu.ability.mask.png (see-through background removed; glyph stable across cal_expanded_street and live_hud_expanded_barrels)"
+  },
+  {
+    "id": "gather.tab",
+    "imageFile": "gather.tab.png",
+    "expectedCenter": {
+      "x": 1740,
+      "y": 716
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav, navFixed",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/make_view_full.png (proofs/out, 2026-10-15) ClientFull offset (0,0) scale 1; client rect (1690,694)-(1790,739); the 'Gather' tab of the Ability view's right column, NOT selected (Make view): opens the Gather tab (the press logs only 'LostFocuse Label_Text'); NavFixed (2026-10-16): a fixed navigation tab of the Ability view's right column, located twice at home before the press; with the cursor on the left part of the game's monitor its slide is cross-monitor (live: 57 refused slid checks for x 1740), so it uses the cross-monitor NavFixed rule like menu.ability"
+  },
+  {
+    "id": "stock.tab",
+    "imageFile": "stock.tab.png",
+    "expectedCenter": {
+      "x": 1740,
+      "y": 577
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "nav, navFixed",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/live_ability_make_full.png (proofs/out, 2026-10-14) ClientFull offset (0,0) scale 1; client rect (1690,555)-(1790,600); the 'Stock' tab of the right column, NOT selected (Make view): opens the Stock tab (the press logs no UI event, only 'LostFocuse Label_Text'); core since 2026-10-16 with NavFixed (FALLBACKS.md): a fixed navigation tab of the Ability view's right column like gather.tab and craft.make.tab, cross-monitor for a cursor on the left part of the game's monitor"
+  }
+]

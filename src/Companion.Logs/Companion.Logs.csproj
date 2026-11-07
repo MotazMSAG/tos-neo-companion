@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "logs" (SPEC 2, 6.1, 6.2, 12): incremental reader + parser + UI-state model of the game log, the UI-name
+    classifier and the log privacy filter. References Companion.Contracts only. The single P/Invoke is
+    kernel32!GetFileInformationByHandle (StaticRules.PInvokeAllowlist). Reads the log; never writes anywhere.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Logs</RootNamespace>
+    <AssemblyName>Companion.Logs</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Logs.Tests" />
+  </ItemGroup>
+</Project>

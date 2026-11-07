@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "app-host" (SPEC 4, 10): the elevated WinForms tray host and composition root. It is the ONLY project that
+    references implementations. app.manifest: requireAdministrator (one UAC per session) + PerMonitorV2 (GameIO needs
+    physical rects and GetDpiForMonitor values). Also runs as the guardian child (guardian switch, host pid, start ticks).
+    Core data (data\*.json) and templates (templates\*.png + templates.json, never templates\staging) are copied to the
+    output; each feature project copies its own data to <out>\features\<id>\.
+    P/Invoke: user32!RegisterHotKey and user32!UnregisterHotKey only (StaticRules.PInvokeAllowlist).
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Companion.App</RootNamespace>
+    <AssemblyName>Companion.App</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- SYSLIB1054: LibraryImport needs AllowUnsafeBlocks (forbidden by Directory.Build.props).
+         WFO0003/WFAC010: the DPI mode is declared in app.manifest on purpose (PerMonitorV2 for the whole process from the
+         first instruction, guardian included; SPEC 10.1), not through Application.SetHighDpiMode. -->
+    <NoWarn>$(NoWarn);SYSLIB1054;WFO0003;WFAC010</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.App.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\Companion.GameIO\Companion.GameIO.csproj" />
+    <ProjectReference Include="..\Companion.Logs\Companion.Logs.csproj" />
+    <ProjectReference Include="..\Companion.Vision\Companion.Vision.csproj" />
+    <ProjectReference Include="..\Companion.Perception\Companion.Perception.csproj" />
+    <ProjectReference Include="..\Companion.Engine\Companion.Engine.csproj" />
+    <ProjectReference Include="..\Companion.Navigation\Companion.Navigation.csproj" />
+    <ProjectReference Include="..\Companion.Knowledge\Companion.Knowledge.csproj" />
+    <ProjectReference Include="..\Companion.Features\Companion.Features.csproj" />
+    <ProjectReference Include="..\Companion.TeaHouse\Companion.TeaHouse.csproj" />
+    <ProjectReference Include="..\Companion.Dailies\Companion.Dailies.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Inventory\Companion.Feature.Inventory.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Recipes\Companion.Feature.Recipes.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Crafting\Companion.Feature.Crafting.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Survey\Companion.Feature.Survey.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Homestead\Companion.Feature.Homestead.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.TeaHouse\Companion.Feature.TeaHouse.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Core data: data\*.json -> <out>\data\ ; templates\*.png + templates.json -> <out>\templates\ (staging never ships). -->
+    <Content Include="..\..\data\*.json" Link="data\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\templates\*.png" Link="templates\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\templates\templates.json" Link="templates\templates.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

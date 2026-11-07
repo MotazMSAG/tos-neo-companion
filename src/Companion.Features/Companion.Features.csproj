@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "features" (SPEC 2, 11.4): feature host (manifest validation, dependency order, isolated Register with a
+    5 s budget, trusted data loading into the catalog builders), the job whitelist (IJobCatalog) and the built-in
+    "core" feature. References Companion.Contracts only.
+    Kit\*.cs is shared, internal helper code; each feature project compiles its own copy (Compile Include, not a
+    ProjectReference), so features still reference Companion.Contracts only.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Features</RootNamespace>
+    <AssemblyName>Companion.Features</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Features.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+</Project>

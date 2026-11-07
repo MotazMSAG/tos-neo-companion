@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Offline tests for unit "vision-ocr" (Perception). Uses Windows OCR on captures (tests\TestData\images; a few older cases read proofs\out), read-only; no window access. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Vision\Companion.Vision.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Perception\Companion.Perception.csproj" />
+  </ItemGroup>
+</Project>

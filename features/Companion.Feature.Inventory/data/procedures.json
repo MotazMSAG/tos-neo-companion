@@ -1,0 +1,227 @@
+[
+  {
+    "id": "inventory.scanBag",
+    "description": "Reset, B opens the bag, read the visible grid (bag.grid), Esc closes it. Key-only (maxClicks 0). Stub until bag.grid is surveyed: cell grid, counts, 3 tabs; scrolling unproven.",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 25,
+      "maxClicks": 0,
+      "maxEsc": 8,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "reset",
+        "pre": {},
+        "action": { "type": "reset", "maxEsc": 10 },
+        "expect": { "uiEvents": [ { "verb": "hideTop" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "open",
+        "pre": { "hudClean": true },
+        "action": { "type": "key", "key": "b" },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_BAG_MAIN" }, { "verb": "openConst", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000,
+        "flags": "compensateOnPark"
+      },
+      {
+        "id": "survey.bag.grid",
+        "pre": { "topUi": "UI_BAG_MAIN" },
+        "action": { "type": "needsSurvey", "what": "bag.grid" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "read",
+        "pre": { "topUi": "UI_BAG_MAIN" },
+        "action": { "type": "read", "readerId": "bag.grid", "outputKey": "bag" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "close",
+        "pre": { "topUi": "UI_BAG_MAIN" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_BAG_MAIN" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "inventory.scanStock",
+    "description": "ScanStock run (read-only, no commit, 2026-10-15): open Ability if needed, then open Stock, or press a sub-tab, or drag the grid down or up (stock.anchor + offset), or go back to Make",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "open",
+        "pre": {},
+        "action": { "type": "call", "procedureId": "OpenAbility" },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_LIFESKILL_MAKE_VIEW" }, { "verb": "openConst", "uiName": "UI_LIFESKILL_MAKE_VIEW" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "announce.close",
+        "pre": {},
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_LIFE_STAGE_PREVIEW" } ] },
+        "timeoutMs": 3000,
+        "flags": "skipIfSatisfied"
+      },
+      {
+        "id": "stock.open",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.tab" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "stock.settle",
+        "pre": {},
+        "action": { "type": "wait", "durationMs": 1000 },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "sub.ability",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.anchor", "offset": { "x": -1375, "y": -351 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "sub.homestead",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.anchor", "offset": { "x": -1145, "y": -351 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "sub.tailor",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.anchor", "offset": { "x": -913, "y": -351 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "sub.hyperweather",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.anchor", "offset": { "x": -683, "y": -351 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "sub.settle",
+        "pre": {},
+        "action": { "type": "wait", "durationMs": 1000 },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "top",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "drag", "templateId": "stock.anchor", "offset": { "x": -815, "y": -157 }, "delta": { "x": 0, "y": 240 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "drag", "templateId": "stock.anchor", "offset": { "x": -815, "y": 23 }, "delta": { "x": 0, "y": -240 } },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "scroll.settle",
+        "pre": {},
+        "action": { "type": "wait", "durationMs": 800 },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "back",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "craft.make.tab" },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "back.settle",
+        "pre": {},
+        "action": { "type": "wait", "durationMs": 800 },
+        "expect": {},
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  },
+  {
+    "id": "inventory.stockTip",
+    "description": "Stock item tip (read-only, no commit; live 2026-10-15): press a Stock tile (stock.anchor + the tile offset the job sets); the game logs the item name and id; Esc closes the tip",
+    "kind": "navigation",
+    "gate": "none",
+    "limits": {
+      "maxCountedPerStep": 3,
+      "maxUncountedPerStep": 4,
+      "maxStepBacks": 1,
+      "maxRestarts": 2,
+      "maxPreconditionLost": 2,
+      "maxInputBatches": 30,
+      "maxClicks": 8,
+      "maxEsc": 12,
+      "patienceMs": 600000
+    },
+    "steps": [
+      {
+        "id": "tip.open",
+        "pre": { "topUi": "UI_LIFESKILL_MAKE_VIEW" },
+        "action": { "type": "click", "templateId": "stock.anchor", "offset": { "x": -1342, "y": -165 } },
+        "expect": { "uiEvents": [ { "verb": "show", "uiName": "UI_ITEM_TIPS_PASS_TOUCH" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      },
+      {
+        "id": "tip.close",
+        "pre": { "topUi": "UI_ITEM_TIPS_PASS_TOUCH" },
+        "action": { "type": "key", "key": "escape" },
+        "expect": { "uiEvents": [ { "verb": "hideTop", "uiName": "UI_ITEM_TIPS_PASS_TOUCH" } ] },
+        "timeoutMs": 3000,
+        "flags": "none"
+      }
+    ]
+  }
+]

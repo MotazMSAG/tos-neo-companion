@@ -1,0 +1,198 @@
+// Seed UI map (SPEC 8.3). Deserialized once at host start with ContractJson.Options as a UiMap.
+// Screens carry id, log UI name, anchor templates, HUD state, survey status and escCloses.
+// Buttons go forward from a screen (template OR whitelisted key). Leaving an escCloses screen is a Reset (Esc until
+// 'hide top ui nil'); Esc buttons are not modelled. Forbidden keys (Y, I, Enter) are hard-denied in code and never
+// appear here. Deny zones are client rects (approximate, guard only) that apply to every HUD state.
+{
+  "schemaVersion": 1,
+  "screens": [
+    {
+      "id": "hud.collapsed",
+      "anchorTemplateIds": [ "hud.bag", "hud.toggle.collapsed" ],
+      "isHud": true,
+      "hud": "collapsed",
+      "status": "known",
+      "escCloses": false,
+      "notes": "Collapsed right HUD (four-petal toggle). c3b_hud_right_x1440.png, full scale."
+    },
+    {
+      "id": "hud.expanded",
+      "anchorTemplateIds": [ "hud.bag", "hud.toggle.expanded" ],
+      "isHud": true,
+      "hud": "expanded",
+      "status": "provisional",
+      "escCloses": false,
+      "notes": "Expanded menu (X toggle). Only a half-scale, older-layout capture exists (c1_ability.png): re-measure with Calibrate."
+    },
+    {
+      "id": "bag",
+      "logUiName": "UI_BAG_MAIN",
+      "anchorTemplateIds": [],
+      "isHud": false,
+      "status": "known",
+      "escCloses": true,
+      "notes": "Known from the log only (proofs b, g, c3 run 3); anchors need a survey."
+    },
+    {
+      "id": "ability",
+      "logUiName": "UI_LIFESKILL_MAKE_VIEW",
+      "anchorTemplateIds": [],
+      "isHud": false,
+      "status": "provisional",
+      "escCloses": true,
+      "notes": "Crafting view opened by the Ability menu button; anchors need a survey."
+    },
+    {
+      "id": "lumi_hut",
+      "logUiName": "UI_HOME_PET_VIEW",
+      "anchorTemplateIds": [],
+      "isHud": false,
+      "status": "needsSurvey",
+      "escCloses": true,
+      "notes": "Lumi's Hut (Homestead). Seen only at half scale (c3_Ability.png, c3 run 1)."
+    },
+    {
+      "id": "craft_station",
+      "logUiName": "UI_LIFE_ALCHEMIST_MAKE_POT",
+      "anchorTemplateIds": [],
+      "isHud": false,
+      "status": "needsSurvey",
+      "escCloses": false,
+      "notes": "Crafting station mini-UI. Never Esc during a craft (unproven whether Esc cancels it)."
+    }
+  ],
+  "buttons": [
+    {
+      "id": "hud.expand",
+      "screenId": "hud.collapsed",
+      "templateId": "hud.toggle.collapsed",
+      "leadsTo": "hud.expanded",
+      "safety": "toggle",
+      "gate": "none",
+      "status": "known",
+      "notes": "Four-petal toggle: expands the menu."
+    },
+    {
+      "id": "hud.collapse",
+      "screenId": "hud.expanded",
+      "templateId": "hud.toggle.expanded",
+      "leadsTo": "hud.collapsed",
+      "safety": "toggle",
+      "gate": "none",
+      "status": "provisional",
+      "notes": "X toggle: collapses the menu. Kept provisional on purpose (never a navigation hop): since 2026-10-14 the menu stays expanded and only the explicit CollapseMenu job collapses it."
+    },
+    {
+      "id": "bag.key.c",
+      "screenId": "hud.collapsed",
+      "key": "b",
+      "leadsTo": "bag",
+      "expectedUi": "UI_BAG_MAIN",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "known",
+      "notes": "Background key B (proof b)."
+    },
+    {
+      "id": "bag.key.e",
+      "screenId": "hud.expanded",
+      "key": "b",
+      "leadsTo": "bag",
+      "expectedUi": "UI_BAG_MAIN",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "known",
+      "notes": "Background key B (proof b)."
+    },
+    {
+      "id": "bag.click.c",
+      "screenId": "hud.collapsed",
+      "templateId": "hud.bag",
+      "leadsTo": "bag",
+      "expectedUi": "UI_BAG_MAIN",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "known",
+      "notes": "Slide click on Bag (c3 run 3 hit (1748,314))."
+    },
+    {
+      "id": "bag.click.e",
+      "screenId": "hud.expanded",
+      "templateId": "hud.bag",
+      "leadsTo": "bag",
+      "expectedUi": "UI_BAG_MAIN",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "known",
+      "notes": "Bag sits in the same top row in both HUD states."
+    },
+    {
+      "id": "menu.ability",
+      "screenId": "hud.expanded",
+      "templateId": "menu.ability",
+      "leadsTo": "ability",
+      "expectedUi": "UI_LIFESKILL_MAKE_VIEW",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "provisional",
+      "notes": "Stale position: in the current layout (1732,444) is Homestead (c3 run 1). Re-cut from Calibrate."
+    },
+    {
+      "id": "menu.homestead",
+      "screenId": "hud.expanded",
+      "leadsTo": "lumi_hut",
+      "expectedUi": "UI_HOME_PET_VIEW",
+      "safety": "navigation",
+      "gate": "none",
+      "status": "needsSurvey",
+      "notes": "No template yet. c3 run 1 hit it at client (1732,444) with a verified aim; re-measure with Calibrate."
+    },
+    {
+      "id": "station.commit",
+      "screenId": "ability",
+      "leadsTo": "craft_station",
+      "safety": "commit",
+      "gate": "crafting",
+      "status": "needsSurvey",
+      "notes": "Make/Craft button of the crafting view (commit, gated by automation.crafting). Not surveyed."
+    }
+  ],
+  "denyZones": [
+    {
+      "id": "hud.market",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 1600, "top": 0, "right": 1680, "bottom": 100 },
+      "label": "Market entry (c3b crop x+1440)"
+    },
+    {
+      "id": "hud.event",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 1485, "top": 0, "right": 1570, "bottom": 100 },
+      "label": "Event entry (c3b crop x+1440)"
+    },
+    {
+      "id": "hud.whatson",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 1595, "top": 115, "right": 1690, "bottom": 235 },
+      "label": "What's on entry (c3b crop x+1440)"
+    },
+    {
+      "id": "hud.timed_offer",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 1590, "top": 280, "right": 1695, "bottom": 400 },
+      "label": "Timed offer entry (c3b crop x+1440)"
+    },
+    {
+      "id": "hud.left_offers",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 300, "top": 0, "right": 580, "bottom": 170 },
+      "label": "Limited-time and other offers (c1 half scale x2)"
+    },
+    {
+      "id": "chat_panel",
+      "screenId": "hud.collapsed",
+      "clientRect": { "left": 660, "top": 590, "right": 1270, "bottom": 1009 },
+      "label": "Chat panel (also masked in every persisted image)"
+    }
+  ]
+}

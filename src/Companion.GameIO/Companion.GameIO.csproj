@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "core-io" (SPEC 2): the ONLY path to the game window. Implements IGameIo and IStopSwitch.
+    References Companion.Contracts only (plus the BCL and System.Drawing for the PrintWindow bitmap).
+    No package references. P/Invoke entry points are limited to StaticRules.PInvokeAllowlist["Companion.GameIO"].
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.GameIO</RootNamespace>
+    <AssemblyName>Companion.GameIO</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- SYSLIB1054: LibraryImport needs AllowUnsafeBlocks, which Directory.Build.props forbids. -->
+    <NoWarn>$(NoWarn);SYSLIB1054</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Keep WinForms out of the implicit usings: only System.Drawing (Bitmap for PrintWindow) is used, explicitly. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.GameIO.Tests" />
+    <!-- The operator-run capture probe reuses the Win32 layer through Diagnostics\ProbeWindow (no messages). -->
+    <InternalsVisibleTo Include="Companion.CaptureProbe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+</Project>

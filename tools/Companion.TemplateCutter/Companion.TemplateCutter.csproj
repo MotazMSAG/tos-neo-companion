@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Offline tool (unit "vision-ocr", SPEC 14): cuts templates from capture PNGs into templates\staging\ (PNG + a
+    staging templates.json). It never writes anywhere else; promotion to templates\ is a separate user/builder step
+    followed by a rebuild and "Trust this build". Refuses Verified templates from non-full-scale sources.
+    No window access, no process start, no network.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Companion.TemplateCutter</RootNamespace>
+    <AssemblyName>Companion.TemplateCutter</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Vision\Companion.Vision.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.Vision.Tests" />
+  </ItemGroup>
+</Project>

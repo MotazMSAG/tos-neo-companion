@@ -1,0 +1,27 @@
+2026-10-13 21:31:04.445	Log	[LOG] -> module/lifeskill/lifeskill_auto_collect_mgr.lua:210    [collect_mgr] set_auto_collect_status    2    stack traceback:
+|		LuaScript/module/lifeskill/lifeskill_auto_collect_mgr.lua:210: in function 'module.lifeskill.lifeskill_auto_collect_mgr.set_auto_collect_status'
+|		LuaScript/module/lifeskill/lifeskill_auto_collect_mgr.lua:301: in function 'module.lifeskill.lifeskill_auto_collect_mgr.process_bag_change'
+|		LuaScript/module/lifeskill/lifeskill_auto_collect_mgr.lua:239: in upvalue 'func'
+|		LuaScript/netevent.lua:41: in function <LuaScript/netevent.lua:40>
+|		[C]: in function 'ejoysdk_lua.compat.ejoysdk_compat.xpcall'
+|		LuaScript/base/env_init.lua:317: in function 'safe_call'
+|		LuaScript/netevent.lua:135: in function <LuaScript/netevent.lua:121>
+|		(...tail calls...)
+|		LuaScript/sproto/SprotoService.lua:426: in function 'sproto.SprotoService.do_process_msg'
+|		LuaScript/sproto/SprotoService.lua:556: in method 'dispatcher'
+|		LuaScript/sproto/SprotoService.lua:369: in function 'sproto.SprotoService.update'
+|		[C]: in function 'ejoysdk_lua.compat.ejoysdk_compat.xpcall'
+|		LuaScript/base/env_init.lua:317: in function 'safe_call'
+|		LuaScript/lss_start.lua:671: in function <LuaScript/lss_start.lua:661>
+|		[C]: in function 'ejoysdk_lua.compat.ejoysdk_compat.xpcall'
+|		LuaScript/base/env_init.lua:317: in function 'safe_call'
+|		LuaScript/lss_start.lua:821: in function <LuaScript/lss_start.lua:767>
+
+2026-10-13 21:30:26.576	Log	[LOG] -> graphic_cfg.lua:284    [graphic] Current screen resolution    1920    1009
+
+2026-10-13 21:30:16.643	Log	[LOG] -> [graphic] Device resolution    1920    1009
+
+2026-10-13 22:59:14.887	Log	[LOG] -> lss_start.lua:856    Unity Application Notify:    OnScreenSizeChange
+
+2026-10-13 22:59:14.887	Log	[LOG] -> graphic_cfg.lua:242    [graphic] Device resolution    1902    991
+

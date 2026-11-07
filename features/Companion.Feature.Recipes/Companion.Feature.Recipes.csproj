@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Feature "recipes" (SPEC 11.4): ScanRecipes, read-only. NeedsSurvey until menu.ability is cut and the craft.pairs
+    reader is surveyed (recipe list scrolling unproven). References Companion.Contracts ONLY; the shared Kit sources
+    are compiled in. data\** is copied to <out>\features\recipes\.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Companion.Feature.Recipes</RootNamespace>
+    <AssemblyName>Companion.Feature.Recipes</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Companion.Features\Kit\*.cs" LinkBase="Kit" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+    <Content Include="data\**" Link="features\recipes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "teahouse.title",
+    "imageFile": "teahouse.title.png",
+    "expectedCenter": {
+      "x": 769,
+      "y": 166
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/teahouse_t0_full.png (helper capture, 2026-10-29) ClientFull offset (0,0) scale 1; client rect (588,142)-(950,190); the 'Kitty Tea House' banner title (static art: pixel-identical on all 20 Tea House test captures): identity of the Tea House page inside What's On and anchor of the top-left board presses; never clicked itself"
+  },
+  {
+    "id": "teahouse.score",
+    "imageFile": "teahouse.score.png",
+    "expectedCenter": {
+      "x": 756,
+      "y": 555
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/teahouse_t0_full.png (helper capture, 2026-10-29) ClientFull offset (0,0) scale 1; client rect (712,536)-(800,574); the 'Score' label of the Tea House panel (static text, pixel-identical on all 20 captures): anchor of the middle-left board presses; never clicked itself"
+  },
+  {
+    "id": "teahouse.current",
+    "imageFile": "teahouse.current.png",
+    "expectedCenter": {
+      "x": 625,
+      "y": 783
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/teahouse_t0_full.png (helper capture, 2026-10-29) ClientFull offset (0,0) scale 1; client rect (570,768)-(680,798); the 'Current' label under the piece in hand (static text, pixel-identical on all 20 captures): anchor of the bottom-left board presses; never clicked itself"
+  },
+  {
+    "id": "teahouse.frame.topright",
+    "imageFile": "teahouse.frame.topright.png",
+    "expectedCenter": {
+      "x": 1773,
+      "y": 140
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/teahouse_t0_full.png (helper capture, 2026-10-29) ClientFull offset (0,0) scale 1; client rect (1700,128)-(1846,152); the board frame's top edge into its top-right corner (static wood, pixel-identical on all 20 captures): anchor of the top-right board presses; never clicked itself"
+  },
+  {
+    "id": "teahouse.frame.bottomright",
+    "imageFile": "teahouse.frame.bottomright.png",
+    "expectedCenter": {
+      "x": 1828,
+      "y": 960
+    },
+    "searchRadius": 12,
+    "threshold": 0.9,
+    "minMargin": 0.1,
+    "status": "verified",
+    "sourceScale": 1,
+    "tags": "screenAnchor",
+    "fireOn": "up",
+    "gate": "none",
+    "source": "tests/TestData/images/teahouse_t0_full.png (helper capture, 2026-10-29) ClientFull offset (0,0) scale 1; client rect (1806,940)-(1850,980); the board frame's bottom-right corner (static wood, pixel-identical on all 20 captures): anchor of the bottom-right board presses; never clicked itself"
+  }
+]

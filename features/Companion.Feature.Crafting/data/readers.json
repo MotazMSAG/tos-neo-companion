@@ -1,0 +1,232 @@
+[
+  {
+    "id": "crafting.gather.grid",
+    "screen": {
+      "logUiName": "UI_LIFESKILL_AUTO_COLLECT",
+      "anchorTemplateIds": [
+        "gather.anchor"
+      ]
+    },
+    "regions": [
+      {
+        "id": "grid",
+        "clientRect": {
+          "left": 318,
+          "top": 530,
+          "right": 992,
+          "bottom": 908
+        },
+        "rule": "iconGrid",
+        "pair": "none",
+        "fontStyle": "gather-count-light",
+        "min": 0,
+        "max": 9999999
+      }
+    ],
+    "status": "ready",
+    "notes": "The Gathering Helper's material list (live 2026-10-15; full-scale captures tests/TestData/images/gather_helper*_full.png): My Favorites first, then every material; tiles about 98x100 in 5 fixed columns (left outlines x 344, 473, 601, 730, 858), rows 126 px apart inside a section; only whole tiles are read: icon.k (the helper geometry's own key domain, rect = the tile); the counts (white digits with a dark rim) are not read (count.k Unknown 'count-absent' or 0 'faded' for a greyed tile at its stock limit)."
+  },
+  {
+    "id": "crafting.gather.set.any",
+    "screen": {
+      "logUiName": "*",
+      "anchorTemplateIds": [
+        "gather.set.anchor"
+      ]
+    },
+    "regions": [],
+    "status": "ready",
+    "notes": "Identity probe (incident 22, 2026-10-24): the material picker's panel is on screen, whatever the log's top. ScreenMismatch in a real capture = no picker after a tile press, so the tip (anchored on the same picture) is not run: its engine reset pressed Esc, closed the helper and restarted a step that could no longer work, using up a soft end."
+  },
+  {
+    "id": "crafting.gather.set",
+    "screen": {
+      "logUiName": "UI_LIFESKILL_AUTO_COLLECT_SET",
+      "anchorTemplateIds": [
+        "gather.set.anchor"
+      ]
+    },
+    "regions": [
+      {
+        "id": "limit",
+        "clientRect": {
+          "left": -40,
+          "top": -109,
+          "right": 355,
+          "bottom": -49
+        },
+        "anchorId": "gather.set.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "room",
+        "clientRect": {
+          "left": 105,
+          "top": 33,
+          "right": 235,
+          "bottom": 77
+        },
+        "anchorId": "gather.set.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      }
+    ],
+    "status": "ready",
+    "notes": "The gathering target picker's 'Stock Limit: a/b' line (live 2026-10-15; tests/TestData/images/gather_set_full.png: 'Stock Limit: 353/500' at client (822..1115, 528..560), the anchor 'Target Quantity' at (810,623)): a = owned, b = the stock limit; the free capacity b - a is the most a target can gather (the game clamps a typed target to it). Region 'room' (2026-10-16): the quantity box's default = the free room (limit - owned; 147 for 353/500, 20 for 280/300), read when a long description pushes the 'Stock Limit' line out of its box (tests/TestData/images/gather_set_lv60_full.png, Wisdom Essence)."
+  },
+  {
+    "id": "crafting.gather.set.silent",
+    "screen": {
+      "logUiName": "UI_LIFESKILL_AUTO_COLLECT",
+      "anchorTemplateIds": [
+        "gather.set.anchor"
+      ]
+    },
+    "regions": [
+      {
+        "id": "limit",
+        "clientRect": {
+          "left": -40,
+          "top": -109,
+          "right": 355,
+          "bottom": -49
+        },
+        "anchorId": "gather.set.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "id": "room",
+        "clientRect": {
+          "left": 105,
+          "top": 33,
+          "right": 235,
+          "bottom": 77
+        },
+        "anchorId": "gather.set.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      }
+    ],
+    "status": "ready",
+    "notes": "The gathering target picker's 'Stock Limit: a/b' line (live 2026-10-15; tests/TestData/images/gather_set_full.png: 'Stock Limit: 353/500' at client (822..1115, 528..560), the anchor 'Target Quantity' at (810,623)): a = owned, b = the stock limit; the free capacity b - a is the most a target can gather (the game clamps a typed target to it). The game logs the picker's show only the first time it builds it, so a later picker is read with the helper as the log's top UI (this reader). Region 'room' (2026-10-16): the quantity box's default = the free room (limit - owned; 147 for 353/500, 20 for 280/300), read when a long description pushes the 'Stock Limit' line out of its box (tests/TestData/images/gather_set_lv60_full.png, Wisdom Essence)."
+  },
+  {
+    "id": "crafting.gather.queue",
+    "screen": {
+      "logUiName": "UI_LIFESKILL_AUTO_COLLECT",
+      "anchorTemplateIds": [
+        "gather.anchor"
+      ]
+    },
+    "regions": [
+      {
+        "id": "slot1",
+        "clientRect": {
+          "left": 128,
+          "top": -90,
+          "right": 296,
+          "bottom": -54
+        },
+        "anchorId": "gather.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      },
+      {
+        "id": "slot2",
+        "clientRect": {
+          "left": 293,
+          "top": -90,
+          "right": 461,
+          "bottom": -54
+        },
+        "anchorId": "gather.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      },
+      {
+        "id": "slot3",
+        "clientRect": {
+          "left": 458,
+          "top": -90,
+          "right": 626,
+          "bottom": -54
+        },
+        "anchorId": "gather.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      },
+      {
+        "id": "slot4",
+        "clientRect": {
+          "left": 623,
+          "top": -90,
+          "right": 791,
+          "bottom": -54
+        },
+        "anchorId": "gather.anchor",
+        "rule": "text",
+        "pair": "none",
+        "fontStyle": null,
+        "min": 0,
+        "max": 0,
+        "optional": true
+      }
+    ],
+    "status": "ready",
+    "notes": "The Gathering Helper's 4 queue slots: the green 'gathered/target' under each queued tile (2026-10-16; tests/TestData/images/gather_queued.png '0/2' at client (~860,402); gather_paused_full.png '200/200', '0/18'; slot centres x 856 + 164 i, y ~404; anchor 'What would you like to gather?' at (640,476)). The target is what the game accepted: it clamps a typed count to the stock limit's room (1 when there is none)."
+  },
+  {
+    "id": "crafting.gear.emptybox",
+    "screen": {
+      "logUiName": "*",
+      "anchorTemplateIds": [
+        "gear.notice.box",
+        "gear.notice.emptybox"
+      ]
+    },
+    "regions": [],
+    "status": "ready",
+    "notes": "Identity probe (incident 20, 2026-10-24): the gear notice is on screen AND its 'Don't show again today' box is empty. Only then is the box clicked (a toggle: clicking a ticked box unticks it, and the notice came back 24 times in one trip)."
+  },
+  {
+    "id": "crafting.gear.notice",
+    "screen": {
+      "logUiName": "*",
+      "anchorTemplateIds": [
+        "gear.notice.box",
+        "gear.notice.replace"
+      ]
+    },
+    "regions": [],
+    "status": "ready",
+    "notes": "Identity probe (2026-10-18, no regions): the gear durability Notice is on screen (its 'Don't show again today' label and its Replace button both found). The game never logs it and it can sit above any screen, so the log top is not checked ('*'): the two anchors are the identity."
+  }
+]

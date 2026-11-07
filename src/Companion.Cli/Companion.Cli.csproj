@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Unit "app-host" (SPEC 10.5): the non-elevated (asInvoker) command-line client of the job pipe. It discovers the host
+    only through the pipe (never the mutex), submits jobs, waits, prints codes and short summaries, and maps results to
+    exit codes. References Companion.Contracts only; no P/Invoke; never touches the game.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Companion.Cli</RootNamespace>
+    <AssemblyName>Companion.Cli</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Companion.App.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Companion.Contracts\Companion.Contracts.csproj" />
+  </ItemGroup>
+</Project>

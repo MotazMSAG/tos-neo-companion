@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Central package versions. Only Microsoft-published packages from nuget.org (NuGet.config maps sources to
+    Microsoft.*, MSTest.*, System.*, runtime.* patterns only).
+    Do NOT use the "MSTest" metapackage or MSTest.Sdk: they pull Mono.Cecil (not Microsoft-published) and restore fails.
+    Test projects reference exactly: Microsoft.NET.Test.Sdk, MSTest.TestAdapter, MSTest.TestFramework.
+  -->
+  <ItemGroup>
+    <PackageVersion Include="MSTest.TestFramework" Version="4.5.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Unit "features" tests (SPEC 13): offline only. Fakes for every engine contract; no window, no game, no elevation. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Companion.Contracts\Companion.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Companion.Features\Companion.Features.csproj" />
+    <!-- Test-only: the vision unit decodes and rescales the captures (tests\TestData\images) for the list scan's image checks. -->
+    <ProjectReference Include="..\..\src\Companion.Vision\Companion.Vision.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Inventory\Companion.Feature.Inventory.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Recipes\Companion.Feature.Recipes.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Crafting\Companion.Feature.Crafting.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Survey\Companion.Feature.Survey.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.Homestead\Companion.Feature.Homestead.csproj" />
+    <ProjectReference Include="..\..\features\Companion.Feature.TeaHouse\Companion.Feature.TeaHouse.csproj" />
+  </ItemGroup>
+</Project>
