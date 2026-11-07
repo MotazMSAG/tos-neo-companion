@@ -9,15 +9,15 @@ TestResults/
 *.binlog
 
 # runtime data (the App keeps its runtime data in %ProgramData%\TOS-companion; these guard local copies)
-run/
-journal/
-diagnostics/
-calibration/
-survey/
-knowledge/
-config.json
-halt.json
-trusted-build.json
+/run/
+/journal/
+/diagnostics/
+/calibration/
+/survey/
+/knowledge/
+/config.json
+/halt.json
+/trusted-build.json
 templates/staging/
 dist-prev/
 
